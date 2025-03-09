@@ -1,0 +1,18 @@
+import { NameSpace } from '../../const';
+import { CameraInfo, ReviewInfo } from '../../types/camera';
+import { State } from '../../types/state';
+
+export const getCameras = (state: State): CameraInfo[] => state[NameSpace.Data].cameras;
+
+export const getCameraById = (state: State): CameraInfo => state[NameSpace.Data].cameraById;
+
+export const getSimilarCameras = (state: State): CameraInfo[] => state[NameSpace.Data].similarCameras;
+
+export const getReviews = (state: State): ReviewInfo[] => state[NameSpace.Data].reviews;
+
+export const getCamerasDataLoadingStatus = (state: State): boolean => state[NameSpace.Data].isCamerasDataLoading;
+
+export const getErrorStatus = (state: State): boolean => state[NameSpace.Data].hasError;
+
+export const getSubmittingStatus = (state: State): boolean => state[NameSpace.Data].isSubmitting;
+

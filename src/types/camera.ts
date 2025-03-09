@@ -35,7 +35,7 @@ export type ReviewInfo = {
 }
 
 export type ReviewPostInfo = {
-  id: string;
+  cameraId: number;
   userName: string;
   advantage: string;
   disadvantage: string;

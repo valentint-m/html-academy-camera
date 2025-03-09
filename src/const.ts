@@ -16,7 +16,9 @@ enum Path {
   Main = '/',
   Catalog = '/catalog',
   Basket = '/basket',
-  Product = '/product:id',
+  Product = '/product/:id',
 }
 
-export { NameSpace, ApiRoute, Path };
+const productPath = '/product/';
+
+export { NameSpace, ApiRoute, Path, productPath };

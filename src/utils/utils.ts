@@ -1,15 +1,19 @@
-import { ApiRoute } from '../const';
+import { ApiRoute, productPath } from '../const';
 
 function getCameraUrlById (id: number) {
-  return `${ApiRoute.Cameras}/${id}`;
+  return `${ApiRoute.Cameras}${id}`;
 }
 
 function getSimilarCamerasUrlById (id: number) {
-  return `${ApiRoute.Cameras}/${id}/${ApiRoute.SimilarCameras}`;
+  return `${ApiRoute.Cameras}${id}${ApiRoute.SimilarCameras}`;
 }
 
 function getCameraReviewsUrlById (id: number) {
-  return `${ApiRoute.Cameras}/${id}/${ApiRoute.Reviews}`;
+  return `${ApiRoute.Cameras}${id}${ApiRoute.Reviews}`;
 }
 
-export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById };
+function getCameraPathById (id: number) {
+  return `${productPath}${id}`;
+}
+
+export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById };

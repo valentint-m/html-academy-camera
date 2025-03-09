@@ -76,7 +76,7 @@ export default function ProductScreen (): JSX.Element {
                     <svg width="17" height="16" aria-hidden="true">
                       <use xlinkHref="#icon-star"></use>
                     </svg>
-                    <p className="visually-hidden">Рейтинг: 4</p>
+                    <p className="visually-hidden">Рейтинг: {cameraById.rating}</p>
                     <p className="rate__count"><span className="visually-hidden">Всего оценок:</span>{cameraById.reviewCount}</p>
                   </div>
                   <p className="product__price"><span className="visually-hidden">Цена:</span>{`${cameraById.price} ₽`}</p>

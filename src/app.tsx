@@ -29,6 +29,7 @@ function App (): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path={Path.Main} element={<CatalogScreen />} />
         <Route path={Path.Catalog} element={<CatalogScreen />} />
         <Route path={Path.Product} element={<ProductScreen />} />
         <Route path={Path.Basket} element={<BasketScreen />} />

@@ -13,6 +13,7 @@ enum ApiRoute {
 }
 
 enum Path {
+  Main = '/',
   Catalog = '/catalog',
   Basket = '/basket',
   Product = '/product:id',

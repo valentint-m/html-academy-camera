@@ -4,9 +4,10 @@ import { getCameraPathById } from '../../utils/utils';
 
 type ProductCardProps = {
   camera: CameraInfo;
+  onCallButtonClick(camera: CameraInfo): void;
 }
 
-export default function ProductCard ({camera}: ProductCardProps): JSX.Element {
+export default function ProductCard ({camera, onCallButtonClick}: ProductCardProps): JSX.Element {
   return (
     <div className="product-card">
       <div className="product-card__img">
@@ -39,7 +40,7 @@ export default function ProductCard ({camera}: ProductCardProps): JSX.Element {
         </p>
       </div>
       <div className="product-card__buttons">
-        <button className="btn btn--purple product-card__btn" type="button">Купить
+        <button className="btn btn--purple product-card__btn" type="button" onClick={() => onCallButtonClick(camera)}>Купить
         </button>
         <Link className="btn btn--transparent" to={getCameraPathById(camera.id)}>Подробнее
         </Link>

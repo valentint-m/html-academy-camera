@@ -1,11 +1,22 @@
+import { useState } from 'react';
+import CatalogCallItemPopup from '../../components/catalog-call-item-popup/catalog-call-item-popup';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
 import ProductList from '../../components/product-list/product-list';
 import { useAppSelector } from '../../hooks';
 import { getCameras } from '../../store/camera-data/camera-data-selectors';
+import { CameraInfo } from '../../types/camera';
 
 export default function CatalogScreen (): JSX.Element {
+  const [selectedCamera, setCamera] = useState<CameraInfo | undefined>(undefined);
+  const [isPopupActive, setPopupActive] = useState(false);
+
   const cameras = useAppSelector(getCameras);
+
+  function handleCallButtonClick (camera: CameraInfo) {
+    setPopupActive(true);
+    setCamera(camera);
+  }
 
   return (
     <div className="wrapper">
@@ -41,13 +52,14 @@ export default function CatalogScreen (): JSX.Element {
                 </div>
                 <div className="catalog__content">
 
-                  <ProductList cameras={cameras} />
+                  <ProductList cameras={cameras} handleCallButtonClick={handleCallButtonClick} />
 
                 </div>
               </div>
             </div>
           </section>
         </div>
+        {isPopupActive && selectedCamera && <CatalogCallItemPopup camera={selectedCamera} />}
       </main>
       <Footer />
     </div>

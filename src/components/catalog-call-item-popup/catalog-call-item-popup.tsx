@@ -28,19 +28,21 @@ export default function CatalogCallItemPopup ({camera}: CatalogCallItemPopupProp
               <p className="basket-item__price"><span className="visually-hidden">Цена:</span>{camera.price} ₽</p>
             </div>
           </div>
-          <div className="custom-input form-review__item">
-            <label>
-              <span className="custom-input__label">Телефон
-                <svg width="9" height="9" aria-hidden="true">
-                  <use xlinkHref="#icon-snowflake"></use>
-                </svg>
-              </span>
-              <input type="tel" name="user-tel" placeholder="Введите ваш номер" required />
-            </label>
-            <p className="custom-input__error">Нужно указать номер</p>
-          </div>
+          <form id="hook-form">
+            <div className="custom-input form-review__item">
+              <label>
+                <span className="custom-input__label">Телефон
+                  <svg width="9" height="9" aria-hidden="true">
+                    <use xlinkHref="#icon-snowflake"></use>
+                  </svg>
+                </span>
+                <input type="tel" name="user-tel" placeholder="Введите ваш номер" required />
+              </label>
+              <p className="custom-input__error">Нужно указать номер</p>
+            </div>
+          </form>
           <div className="modal__buttons">
-            <button className="btn btn--purple modal__btn modal__btn--fit-width" type="button">
+            <button className="btn btn--purple modal__btn modal__btn--fit-width" form='hook-form' type="submit">
               <svg width="24" height="16" aria-hidden="true">
                 <use xlinkHref="#icon-add-basket"></use>
               </svg>Заказать

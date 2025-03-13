@@ -1,10 +1,24 @@
+import { useForm } from 'react-hook-form';
 import { CameraInfo } from '../../types/camera';
+import { FormEvent } from 'react';
 
 type CatalogCallItemPopupProps = {
   camera: CameraInfo;
 }
 
 export default function CatalogCallItemPopup ({camera}: CatalogCallItemPopupProps): JSX.Element {
+  const { register, handleSubmit, formState: { errors } } = useForm();
+
+  function checkTel (tel: string) {
+    const re = new RegExp(/(?:(\+7|8))\(?(\d{3})\)?(\d{3})[ -]?(\d{2})[ -]?(\d{2})$/, 'g');
+    return tel.match(re) !== null;
+  }
+
+  function onSubmit (evt: FormEvent<HTMLFormElement>) {
+    evt.preventDefault();
+
+  }
+
   return (
     <div className="modal is-active">
       <div className="modal__wrapper">
@@ -28,7 +42,8 @@ export default function CatalogCallItemPopup ({camera}: CatalogCallItemPopupProp
               <p className="basket-item__price"><span className="visually-hidden">Цена:</span>{camera.price} ₽</p>
             </div>
           </div>
-          <form id="hook-form">
+          <form id="hook-form" onSubmit={handleSubmit(onSubmit)}>
+
             <div className="custom-input form-review__item">
               <label>
                 <span className="custom-input__label">Телефон
@@ -36,10 +51,17 @@ export default function CatalogCallItemPopup ({camera}: CatalogCallItemPopupProp
                     <use xlinkHref="#icon-snowflake"></use>
                   </svg>
                 </span>
-                <input type="tel" name="user-tel" placeholder="Введите ваш номер" required />
+                <input type="tel" {...register('userTel', {
+                  required: 'Введите ваш номер',
+                  validate: {checkTel}
+                })}
+                aria-invalid={errors.userTel ? 'true' : 'false'}
+                placeholder="Введите ваш номер" required
+                />
               </label>
-              <p className="custom-input__error">Нужно указать номер</p>
+              {errors.userTel?.type === 'required' && <><br/><p className="custom-input__error">Нужно указать номер</p></>}
             </div>
+
           </form>
           <div className="modal__buttons">
             <button className="btn btn--purple modal__btn modal__btn--fit-width" form='hook-form' type="submit">

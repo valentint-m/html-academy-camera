@@ -1,6 +1,7 @@
 import { NameSpace } from '../../const';
 import { CameraInfo, ReviewInfo } from '../../types/camera';
 import { State } from '../../types/state';
+import { sortReviewsByLatest } from '../../utils/utils';
 
 export const getCameras = (state: State): CameraInfo[] => state[NameSpace.Data].cameras;
 
@@ -8,7 +9,7 @@ export const getCameraById = (state: State): CameraInfo => state[NameSpace.Data]
 
 export const getSimilarCameras = (state: State): CameraInfo[] => state[NameSpace.Data].similarCameras;
 
-export const getReviews = (state: State): ReviewInfo[] => state[NameSpace.Data].reviews;
+export const getReviews = (state: State): ReviewInfo[] => sortReviewsByLatest(state[NameSpace.Data].reviews);
 
 export const getCamerasDataLoadingStatus = (state: State): boolean => state[NameSpace.Data].isCamerasDataLoading;
 

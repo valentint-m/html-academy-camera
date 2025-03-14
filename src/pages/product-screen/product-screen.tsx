@@ -2,7 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { CameraInfo, ReviewInfo } from '../../types/camera';
 import { getCameraById, getReviews } from '../../store/camera-data/camera-data-selectors';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchCameraByIdAction, fetchReviewsByIdAction } from '../../store/api-actions/api-actions';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
@@ -13,8 +13,18 @@ export default function ProductScreen (): JSX.Element {
   const pageId = Number(useParams().id);
   const dispatch = useAppDispatch();
 
+  const [isSpecsActive, setSpecsActive] = useState(false);
+
   const cameraById: CameraInfo = useAppSelector(getCameraById);
   const reviewsById: ReviewInfo[] = useAppSelector(getReviews);
+
+  function handleSpecsButtonClick () {
+    setSpecsActive(true);
+  }
+
+  function handleDescriptionButtonClick () {
+    setSpecsActive(false);
+  }
 
   useEffect(() => {
     if (pageId !== cameraById.id && pageId) {
@@ -87,11 +97,11 @@ export default function ProductScreen (): JSX.Element {
                   </button>
                   <div className="tabs product__tabs">
                     <div className="tabs__controls product__tabs-controls">
-                      <button className="tabs__control" type="button">Характеристики</button>
-                      <button className="tabs__control is-active" type="button">Описание</button>
+                      <button className={`tabs__control ${isSpecsActive ? 'is-active' : ''}`} type="button" onClick={handleSpecsButtonClick}>Характеристики</button>
+                      <button className={`tabs__control ${!isSpecsActive ? 'is-active' : ''}`} type="button" onClick={handleDescriptionButtonClick}>Описание</button>
                     </div>
                     <div className="tabs__content">
-                      <div className="tabs__element">
+                      <div className={`tabs__element ${isSpecsActive ? 'is-active' : ''}`}>
                         <ul className="product__tabs-list">
                           <li className="item-list"><span className="item-list__title">Артикул:</span>
                             <p className="item-list__text"> {cameraById.vendorCode}</p>
@@ -107,7 +117,7 @@ export default function ProductScreen (): JSX.Element {
                           </li>
                         </ul>
                       </div>
-                      <div className="tabs__element is-active">
+                      <div className={`tabs__element ${!isSpecsActive ? 'is-active' : ''}`}>
                         <div className="product__tabs-text">
                           <p>{cameraById.description}</p>
                         </div>

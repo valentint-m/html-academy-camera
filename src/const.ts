@@ -19,6 +19,8 @@ enum Path {
   Product = '/product/:id',
 }
 
-const productPath = '/product/';
+const PRODUCT_PATH = '/product/';
 
-export { NameSpace, ApiRoute, Path, productPath };
+const REVIEWS_COUNT_DEFAULT = 3;
+
+export { NameSpace, ApiRoute, Path, PRODUCT_PATH, REVIEWS_COUNT_DEFAULT };

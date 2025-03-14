@@ -1,4 +1,4 @@
-import { ApiRoute, productPath } from '../const';
+import { ApiRoute, PRODUCT_PATH } from '../const';
 
 function getCameraUrlById (id: number) {
   return `${ApiRoute.Cameras}${id}`;
@@ -13,7 +13,7 @@ function getCameraReviewsUrlById (id: number) {
 }
 
 function getCameraPathById (id: number) {
-  return `${productPath}${id}`;
+  return `${PRODUCT_PATH}${id}`;
 }
 
 export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById };

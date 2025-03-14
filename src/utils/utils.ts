@@ -17,6 +17,19 @@ function getCameraPathById (id: number) {
   return `${PRODUCT_PATH}${id}`;
 }
 
+function getFormattedDate (dateString: string) {
+  const date = new Date(dateString);
+
+  const formatter = new Intl.DateTimeFormat('ru', {
+    day: '2-digit',
+    month: 'long',
+  });
+
+  const formattedDate = formatter.format(date);
+
+  return formattedDate;
+}
+
 function sortReviewsByLatest(reviews: ReviewInfo[]) {
   const reviewsCopy = Array.from(reviews);
 
@@ -28,5 +41,4 @@ function sortReviewsByLatest(reviews: ReviewInfo[]) {
   return sortedReviews;
 }
 
-
-export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, sortReviewsByLatest };
+export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, getFormattedDate, sortReviewsByLatest };

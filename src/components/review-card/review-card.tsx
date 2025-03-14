@@ -1,4 +1,5 @@
 import { ReviewInfo } from '../../types/camera';
+import { getFormattedDate } from '../../utils/utils';
 
 type ReviewCardProps = {
   reviewInfo: ReviewInfo;
@@ -9,7 +10,7 @@ export default function ReviewCard ({reviewInfo}: ReviewCardProps): JSX.Element 
     <li className="review-card">
       <div className="review-card__head">
         <p className="title title--h4">{reviewInfo.userName} </p>
-        <time className="review-card__data" dateTime={reviewInfo.createAt}>{reviewInfo.createAt}</time>
+        <time className="review-card__data" dateTime={reviewInfo.createAt}>{getFormattedDate(reviewInfo.createAt)}</time>
       </div>
       <div className="rate review-card__rate">
         <svg width="17" height="16" aria-hidden="true">

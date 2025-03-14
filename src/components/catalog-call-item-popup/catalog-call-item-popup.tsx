@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { CameraInfo } from '../../types/camera';
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 
 type CatalogCallItemPopupProps = {
   camera: CameraInfo;
@@ -8,10 +8,27 @@ type CatalogCallItemPopupProps = {
 
 export default function CatalogCallItemPopup ({camera}: CatalogCallItemPopupProps): JSX.Element {
   const { register, handleSubmit, formState: { errors } } = useForm();
+  const [isValidateChecked, setValidateChecked] = useState(false);
 
   function checkTel (tel: string) {
     const re = new RegExp(/(?:(\+7|8))\(?(\d{3})\)?(\d{3})[ -]?(\d{2})[ -]?(\d{2})$/, 'g');
-    return tel.match(re) !== null;
+
+    setValidateChecked(true);
+
+    return tel.match(re) !== null || 'Некорректный ввод';
+  }
+
+  function isFormValid () {
+    if (!isValidateChecked) {
+      return '';
+    }
+
+    if (isValidateChecked && errors.userTel) {
+      return 'is-invalid';
+    }
+
+    return 'is-valid';
+
   }
 
   function onSubmit (evt: FormEvent<HTMLFormElement>) {
@@ -43,26 +60,29 @@ export default function CatalogCallItemPopup ({camera}: CatalogCallItemPopupProp
             </div>
           </div>
           <form id="hook-form" onSubmit={handleSubmit(onSubmit)}>
+            <div className={`custom-input ${!isValidateChecked ? 'default' : ''} ${isFormValid()}`}>
+              <div className="custom-input form-review__item">
+                <label>
+                  <span className="custom-input__label">Телефон
+                    <svg width="9" height="9" aria-hidden="true">
+                      <use xlinkHref="#icon-snowflake"></use>
+                    </svg>
+                  </span>
 
-            <div className="custom-input form-review__item">
-              <label>
-                <span className="custom-input__label">Телефон
-                  <svg width="9" height="9" aria-hidden="true">
-                    <use xlinkHref="#icon-snowflake"></use>
-                  </svg>
-                </span>
-                <input type="tel" {...register('userTel', {
-                  required: 'Введите ваш номер',
-                  validate: {checkTel}
-                })}
-                aria-invalid={errors.userTel ? 'true' : 'false'}
-                placeholder="Введите ваш номер" required
-                />
-              </label>
-              {errors.userTel?.type === 'required' && <><br/><p className="custom-input__error">Нужно указать номер</p></>}
+                  <input type="tel" {...register('userTel', {
+                    required: 'Введите ваш номер',
+                    validate: {checkTel}
+                  })}
+                  aria-invalid={errors.userTel ? 'true' : 'false'}
+                  placeholder="Введите ваш номер" required
+                  />
+
+                </label>
+                {errors.userTel && <p className="custom-input__error">{errors.userTel?.message?.toString()}</p>}
+              </div>
             </div>
-
           </form>
+          <br />
           <div className="modal__buttons">
             <button className="btn btn--purple modal__btn modal__btn--fit-width" form='hook-form' type="submit">
               <svg width="24" height="16" aria-hidden="true">

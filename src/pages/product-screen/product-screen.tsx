@@ -4,10 +4,10 @@ import { CameraInfo, ReviewInfo } from '../../types/camera';
 import { getCameraById, getReviews } from '../../store/camera-data/camera-data-selectors';
 import { useEffect, useState } from 'react';
 import { fetchCameraByIdAction, fetchReviewsByIdAction } from '../../store/api-actions/api-actions';
+import { Path, REVIEWS_COUNT_DEFAULT, SCROLL_UP_COORD } from '../../const';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
 import ReviewList from '../../components/review-list/review-list';
-import { Path, REVIEWS_COUNT_DEFAULT } from '../../const';
 
 export default function ProductScreen (): JSX.Element {
   const pageId = Number(useParams().id);
@@ -29,6 +29,14 @@ export default function ProductScreen (): JSX.Element {
 
   function handleDescriptionButtonClick () {
     setSpecsActive(false);
+  }
+
+  function scrollToTop (evt: React.MouseEvent<HTMLAnchorElement>) {
+    evt.preventDefault();
+    window.scrollTo({
+      top: SCROLL_UP_COORD,
+      behavior: 'smooth'
+    });
   }
 
   useEffect(() => {
@@ -152,7 +160,7 @@ export default function ProductScreen (): JSX.Element {
           </div>
         </div>
       </main>
-      <a className="up-btn" href="#header">
+      <a className="up-btn" href="" onClick={scrollToTop}>
         <svg width="12" height="18" aria-hidden="true">
           <use xlinkHref="#icon-arrow2"></use>
         </svg>

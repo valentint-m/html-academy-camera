@@ -5,9 +5,10 @@ import useScrollLock from '../../hooks/use-scroll-lock';
 
 type CatalogCallItemPopupProps = {
   camera: CameraInfo;
+  onCloseButtonClick: () => void;
 }
 
-export default function CatalogCallItemPopup ({camera}: CatalogCallItemPopupProps): JSX.Element {
+export default function CatalogCallItemPopup ({camera, onCloseButtonClick}: CatalogCallItemPopupProps): JSX.Element {
   useScrollLock();
 
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -93,7 +94,7 @@ export default function CatalogCallItemPopup ({camera}: CatalogCallItemPopupProp
               </svg>Заказать
             </button>
           </div>
-          <button className="cross-btn" type="button" aria-label="Закрыть попап">
+          <button className="cross-btn" type="button" aria-label="Закрыть попап" onClick={onCloseButtonClick}>
             <svg width="10" height="10" aria-hidden="true">
               <use xlinkHref="#icon-close"></use>
             </svg>

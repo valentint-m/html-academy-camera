@@ -25,6 +25,10 @@ export default function CatalogScreen (): JSX.Element {
     setCamera(camera);
   }
 
+  function handleModalCloseButtonClick () {
+    setPopupActive(false);
+  }
+
   return (
     <div className="wrapper">
       <Header />
@@ -66,7 +70,7 @@ export default function CatalogScreen (): JSX.Element {
             </div>
           </section>
         </div>
-        {isPopupActive && selectedCamera && <CatalogCallItemPopup camera={selectedCamera} />}
+        {isPopupActive && selectedCamera && <CatalogCallItemPopup camera={selectedCamera} onCloseButtonClick={handleModalCloseButtonClick}/>}
       </main>
       <Footer />
     </div>

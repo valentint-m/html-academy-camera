@@ -1,8 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { CameraInfo } from '../../types/camera';
 import { FormEvent, useEffect, useRef, useState } from 'react';
-import useScrollLock from '../../hooks/use-scroll-lock';
 import { ESCAPE_KEY } from '../../const';
+import useScrollLock from '../../hooks/use-scroll-lock';
 import ReactFocusLock from 'react-focus-lock';
 
 type CatalogCallItemPopupProps = {
@@ -15,13 +15,6 @@ export default function CatalogCallItemPopup ({camera, onCloseModal}: CatalogCal
 
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [isValidateChecked, setValidateChecked] = useState(false);
-  const ref = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (ref.current) {
-      ref.current.focus();
-    }
-  }, []);
 
   useEffect(() => {
     function onKeyPressed (evt: KeyboardEvent) {
@@ -93,7 +86,7 @@ export default function CatalogCallItemPopup ({camera, onCloseModal}: CatalogCal
                       validate: {checkTel}
                     })}
                     aria-invalid={errors.userTel ? 'true' : 'false'}
-                    placeholder="Введите ваш номер" required ref={ref}
+                    placeholder="Введите ваш номер" required autoFocus
                     />
 
                   </label>

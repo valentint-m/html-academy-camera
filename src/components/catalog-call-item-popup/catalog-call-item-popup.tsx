@@ -1,12 +1,15 @@
 import { useForm } from 'react-hook-form';
 import { CameraInfo } from '../../types/camera';
 import { FormEvent, useState } from 'react';
+import useScrollLock from '../../hooks/use-scroll-lock';
 
 type CatalogCallItemPopupProps = {
   camera: CameraInfo;
 }
 
 export default function CatalogCallItemPopup ({camera}: CatalogCallItemPopupProps): JSX.Element {
+  useScrollLock();
+
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [isValidateChecked, setValidateChecked] = useState(false);
 

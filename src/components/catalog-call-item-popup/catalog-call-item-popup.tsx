@@ -38,13 +38,7 @@ export default function CatalogCallItemPopup ({camera, onCloseModal}: CatalogCal
     if (!isValidateChecked) {
       return '';
     }
-
-    if (isValidateChecked && errors.userTel) {
-      return 'is-invalid';
-    }
-
-    return 'is-valid';
-
+    return isValidateChecked && errors.userTel ? 'is-invalid' : 'is-valid';
   }
 
   function onSubmit (evt: FormEvent<HTMLFormElement>) {

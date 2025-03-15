@@ -1,19 +1,30 @@
 import { useForm } from 'react-hook-form';
 import { CameraInfo } from '../../types/camera';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import useScrollLock from '../../hooks/use-scroll-lock';
+import { ESCAPE_KEY } from '../../const';
 
 type CatalogCallItemPopupProps = {
   camera: CameraInfo;
-  onCloseButtonClick: () => void;
-  onOverlayClick: () => void;
+  onCloseModal: () => void;
 }
 
-export default function CatalogCallItemPopup ({camera, onCloseButtonClick, onOverlayClick}: CatalogCallItemPopupProps): JSX.Element {
+export default function CatalogCallItemPopup ({camera, onCloseModal}: CatalogCallItemPopupProps): JSX.Element {
   useScrollLock();
 
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [isValidateChecked, setValidateChecked] = useState(false);
+
+  useEffect(() => {
+    function onKeyPressed (evt: KeyboardEvent) {
+      if (evt.key === ESCAPE_KEY) {
+        onCloseModal();
+      }
+    }
+    window.addEventListener('keydown', onKeyPressed);
+    return () => window.removeEventListener('keydown', onKeyPressed);
+  }, [onCloseModal]
+  );
 
   function checkTel (tel: string) {
     const re = new RegExp(/(?:(\+7|8))\(?(\d{3})\)?(\d{3})[ -]?(\d{2})[ -]?(\d{2})$/, 'g');
@@ -44,7 +55,7 @@ export default function CatalogCallItemPopup ({camera, onCloseButtonClick, onOve
   return (
     <div className="modal is-active">
       <div className="modal__wrapper">
-        <div className="modal__overlay" onClick={onOverlayClick}></div>
+        <div className="modal__overlay" onClick={onCloseModal}></div>
         <div className="modal__content">
           <p className="title title--h4">Свяжитесь со мной</p>
           <div className="basket-item basket-item--short">
@@ -95,7 +106,7 @@ export default function CatalogCallItemPopup ({camera, onCloseButtonClick, onOve
               </svg>Заказать
             </button>
           </div>
-          <button className="cross-btn" type="button" aria-label="Закрыть попап" onClick={onCloseButtonClick}>
+          <button className="cross-btn" type="button" aria-label="Закрыть попап" onClick={onCloseModal}>
             <svg width="10" height="10" aria-hidden="true">
               <use xlinkHref="#icon-close"></use>
             </svg>

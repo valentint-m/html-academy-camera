@@ -25,4 +25,6 @@ const SCROLL_UP_COORD = 0;
 
 const REVIEWS_COUNT_DEFAULT = 3;
 
-export { NameSpace, ApiRoute, Path, PRODUCT_PATH, REVIEWS_COUNT_DEFAULT, SCROLL_UP_COORD };
+const ESCAPE_KEY = 'Escape';
+
+export { NameSpace, ApiRoute, Path, PRODUCT_PATH, REVIEWS_COUNT_DEFAULT, SCROLL_UP_COORD, ESCAPE_KEY };

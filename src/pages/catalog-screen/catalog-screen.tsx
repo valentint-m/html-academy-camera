@@ -25,11 +25,7 @@ export default function CatalogScreen (): JSX.Element {
     setCamera(camera);
   }
 
-  function handleModalCloseButtonClick () {
-    setPopupActive(false);
-  }
-
-  function handleModalOverlayClick () {
+  function handleModalClose () {
     setPopupActive(false);
   }
 
@@ -74,7 +70,7 @@ export default function CatalogScreen (): JSX.Element {
             </div>
           </section>
         </div>
-        {isPopupActive && selectedCamera && <CatalogCallItemPopup camera={selectedCamera} onCloseButtonClick={handleModalCloseButtonClick} onOverlayClick={handleModalOverlayClick} />}
+        {isPopupActive && selectedCamera && <CatalogCallItemPopup camera={selectedCamera} onCloseModal={handleModalClose} />}
       </main>
       <Footer />
     </div>

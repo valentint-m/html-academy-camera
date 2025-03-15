@@ -48,7 +48,8 @@ export type CouponInfo = {
 }
 
 export type OrderInfo = {
-  cameraIds: number[];
-  coupon: string;
+  camerasIds: number[];
+  coupon: string | null;
+  tel: string;
 }
 

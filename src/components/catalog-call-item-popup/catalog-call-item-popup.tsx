@@ -1,13 +1,19 @@
 import { useForm } from 'react-hook-form';
-import { CameraInfo } from '../../types/camera';
-import { FormEvent, useEffect, useRef, useState } from 'react';
-import { ESCAPE_KEY } from '../../const';
+import { CameraInfo, OrderInfo } from '../../types/camera';
+import { FormEvent, useEffect, useState } from 'react';
+import { ESCAPE_KEY, PHONE_NUMBER_WITH_PLUS_LENGTH, PhoneNumberCode } from '../../const';
 import useScrollLock from '../../hooks/use-scroll-lock';
 import ReactFocusLock from 'react-focus-lock';
+import { useAppDispatch } from '../../hooks';
+import { orderCameraAction } from '../../store/api-actions/api-actions';
 
 type CatalogCallItemPopupProps = {
   camera: CameraInfo;
   onCloseModal: () => void;
+}
+
+type ModalFormData = {
+  userTel: string;
 }
 
 export default function CatalogCallItemPopup ({camera, onCloseModal}: CatalogCallItemPopupProps): JSX.Element {
@@ -15,6 +21,7 @@ export default function CatalogCallItemPopup ({camera, onCloseModal}: CatalogCal
 
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [isValidateChecked, setValidateChecked] = useState(false);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     function onKeyPressed (evt: KeyboardEvent) {
@@ -42,9 +49,20 @@ export default function CatalogCallItemPopup ({camera, onCloseModal}: CatalogCal
     return isValidateChecked && errors.userTel ? 'is-invalid' : 'is-valid';
   }
 
-  function onSubmit (evt: FormEvent<HTMLFormElement>) {
-    evt.preventDefault();
+  function onSubmit (data: ModalFormData) {
+    let formattedUserTel = data.userTel;
 
+    if (formattedUserTel.length !== PHONE_NUMBER_WITH_PLUS_LENGTH) {
+      formattedUserTel = formattedUserTel.replace(PhoneNumberCode.NoPlusCode, PhoneNumberCode.PlusCode);
+    }
+
+    const orderInfo: OrderInfo = {
+      camerasIds: [camera.id],
+      coupon: null,
+      tel: formattedUserTel,
+    };
+
+    dispatch(orderCameraAction(orderInfo));
   }
 
   return (

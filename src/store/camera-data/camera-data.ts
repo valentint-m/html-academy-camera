@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { NameSpace } from '../../const';
 import { CameraData } from '../../types/state';
-import { checkCouponAction, fetchCameraByIdAction, fetchCamerasAction, fetchReviewsByIdAction, fetchSimilarCamerasByIdAction, orderCameraAction, postReviewAction } from '../api-actions/api-actions';
-import { CameraInfo, ReviewInfo } from '../../types/camera';
+import { checkCouponAction, fetchCameraByIdAction, fetchCamerasAction, fetchPromoCamerasAction, fetchReviewsByIdAction, fetchSimilarCamerasByIdAction, orderCameraAction, postReviewAction } from '../api-actions/api-actions';
+import { CameraInfo, PromoInfo, ReviewInfo } from '../../types/camera';
 
 const initialState: CameraData = {
   cameras: [],
@@ -24,6 +24,7 @@ const initialState: CameraData = {
   },
   similarCameras: [],
   reviews: [],
+  promoCameras: [],
   isCamerasDataLoading: false,
   hasError: false,
   isSubmitting: false,
@@ -81,6 +82,15 @@ export const cameraData = createSlice({
       })
       .addCase(fetchReviewsByIdAction.rejected, (state) => {
         state.isCamerasDataLoading = false;
+        state.hasError = true;
+      })
+      .addCase(fetchPromoCamerasAction.pending, (state) => {
+        state.hasError = false;
+      })
+      .addCase(fetchPromoCamerasAction.fulfilled, (state, action: PayloadAction<PromoInfo[]>) => {
+        state.promoCameras = action.payload;
+      })
+      .addCase(fetchPromoCamerasAction.rejected, (state) => {
         state.hasError = true;
       })
       .addCase(postReviewAction.pending, (state) => {

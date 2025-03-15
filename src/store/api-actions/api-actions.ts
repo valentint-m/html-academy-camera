@@ -3,7 +3,7 @@ import { AppDispatch, State } from '../../types/state';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ApiRoute } from '../../const';
 import { store } from '..';
-import { CameraInfo, CouponInfo, OrderInfo, ReviewInfo, ReviewPostInfo } from '../../types/camera';
+import { CameraInfo, CouponInfo, OrderInfo, PromoInfo, ReviewInfo, ReviewPostInfo } from '../../types/camera';
 import { getCameraReviewsUrlById, getCameraUrlById, getSimilarCamerasUrlById } from '../../utils/utils';
 
 export const fetchCamerasAction = createAsyncThunk<CameraInfo[], undefined, {
@@ -52,6 +52,18 @@ export const fetchReviewsByIdAction = createAsyncThunk<ReviewInfo[], number, {
     const {data} = await api.get<ReviewInfo[]>(getCameraReviewsUrlById(cameraId));
     return data;
   }
+);
+
+export const fetchPromoCamerasAction = createAsyncThunk<PromoInfo[], undefined, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'data/fetchPromoCamerasAction',
+  async (_arg, {extra: api}) => {
+    const {data} = await api.get<PromoInfo[]>(ApiRoute.Promo);
+    return data;
+  },
 );
 
 export const postReviewAction = createAsyncThunk<ReviewInfo, ReviewPostInfo, {

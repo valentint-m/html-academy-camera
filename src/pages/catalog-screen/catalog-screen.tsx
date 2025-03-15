@@ -1,17 +1,24 @@
 import { useState } from 'react';
+import { useAppSelector } from '../../hooks';
+import { getCameras, getPromoCameras } from '../../store/camera-data/camera-data-selectors';
+import { CameraInfo } from '../../types/camera';
+import { Link } from 'react-router-dom';
+import { getCameraPathById } from '../../utils/utils';
 import CatalogCallItemPopup from '../../components/catalog-call-item-popup/catalog-call-item-popup';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
 import ProductList from '../../components/product-list/product-list';
-import { useAppSelector } from '../../hooks';
-import { getCameras } from '../../store/camera-data/camera-data-selectors';
-import { CameraInfo } from '../../types/camera';
 
 export default function CatalogScreen (): JSX.Element {
   const [selectedCamera, setCamera] = useState<CameraInfo | undefined>(undefined);
   const [isPopupActive, setPopupActive] = useState(false);
 
   const cameras = useAppSelector(getCameras);
+  const promoCamera = useAppSelector(getPromoCameras)[0];
+
+  function getPromoCameraInfo (promoId: number): CameraInfo | undefined {
+    return cameras.find((camera) => camera.id === promoId);
+  }
 
   function handleCallButtonClick (camera: CameraInfo) {
     setPopupActive(true);
@@ -24,9 +31,9 @@ export default function CatalogScreen (): JSX.Element {
       <main>
         <div className="banner">
           <picture>
-            <source type="image/webp" srcSet="img/content/banner-bg.webp, img/content/banner-bg@2x.webp 2x" /><img src="img/content/banner-bg.jpg" srcSet="img/content/banner-bg@2x.jpg 2x" width="1280" height="280" alt="баннер" />
+            <source type="image/webp" srcSet={`${promoCamera.previewImgWebp}, ${promoCamera.previewImgWebp2x} 2x`} /><img src={promoCamera.previewImg} srcSet={`${promoCamera.previewImg2x} 2x`} width="1280" height="280" alt="баннер" />
           </picture>
-          <p className="banner__info"><span className="banner__message">Новинка!</span><span className="title title--h1">Cannonball&nbsp;Pro&nbsp;MX&nbsp;8i</span><span className="banner__text">Профессиональная камера от&nbsp;известного производителя</span><a className="btn" href="#">Подробнее</a></p>
+          <p className="banner__info"><span className="banner__message">Новинка!</span><span className="title title--h1">{getPromoCameraInfo(promoCamera.id)?.name}</span><span className="banner__text">{getPromoCameraInfo(promoCamera.id)?.description}</span><Link className="btn" to={getCameraPathById(promoCamera.id)}>Подробнее</Link></p>
         </div>
         <div className="page-content">
           <div className="breadcrumbs">

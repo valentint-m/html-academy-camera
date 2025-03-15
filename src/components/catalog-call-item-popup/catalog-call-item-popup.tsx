@@ -6,9 +6,10 @@ import useScrollLock from '../../hooks/use-scroll-lock';
 type CatalogCallItemPopupProps = {
   camera: CameraInfo;
   onCloseButtonClick: () => void;
+  onOverlayClick: () => void;
 }
 
-export default function CatalogCallItemPopup ({camera, onCloseButtonClick}: CatalogCallItemPopupProps): JSX.Element {
+export default function CatalogCallItemPopup ({camera, onCloseButtonClick, onOverlayClick}: CatalogCallItemPopupProps): JSX.Element {
   useScrollLock();
 
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -43,7 +44,7 @@ export default function CatalogCallItemPopup ({camera, onCloseButtonClick}: Cata
   return (
     <div className="modal is-active">
       <div className="modal__wrapper">
-        <div className="modal__overlay"></div>
+        <div className="modal__overlay" onClick={onOverlayClick}></div>
         <div className="modal__content">
           <p className="title title--h4">Свяжитесь со мной</p>
           <div className="basket-item basket-item--short">

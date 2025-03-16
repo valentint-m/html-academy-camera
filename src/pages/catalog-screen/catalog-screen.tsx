@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAppSelector } from '../../hooks';
-import { getCameras, getPromoCameras } from '../../store/camera-data/camera-data-selectors';
+import { getCameras, getPromoCameras, getSubmittingStatus } from '../../store/camera-data/camera-data-selectors';
 import { CameraInfo } from '../../types/camera';
 import { Link } from 'react-router-dom';
 import { getCameraPathById } from '../../utils/utils';
@@ -15,6 +15,7 @@ export default function CatalogScreen (): JSX.Element {
 
   const cameras = useAppSelector(getCameras);
   const promoCamera = useAppSelector(getPromoCameras)[0];
+  const isSubmitting = useAppSelector(getSubmittingStatus);
 
   function getPromoCameraInfo (promoId: number): CameraInfo | undefined {
     return cameras.find((camera) => camera.id === promoId);
@@ -26,7 +27,9 @@ export default function CatalogScreen (): JSX.Element {
   }
 
   function handleModalClose () {
-    setPopupActive(false);
+    if (!isSubmitting) {
+      setPopupActive(false);
+    }
   }
 
   return (

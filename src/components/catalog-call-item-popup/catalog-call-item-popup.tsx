@@ -1,11 +1,12 @@
 import { useForm } from 'react-hook-form';
 import { CameraInfo, OrderInfo } from '../../types/camera';
-import { FormEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ESCAPE_KEY, PHONE_NUMBER_WITH_PLUS_LENGTH, PhoneNumberCode } from '../../const';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { orderCameraAction } from '../../store/api-actions/api-actions';
+import { getSubmittingStatus } from '../../store/camera-data/camera-data-selectors';
 import useScrollLock from '../../hooks/use-scroll-lock';
 import ReactFocusLock from 'react-focus-lock';
-import { useAppDispatch } from '../../hooks';
-import { orderCameraAction } from '../../store/api-actions/api-actions';
 
 type CatalogCallItemPopupProps = {
   camera: CameraInfo;
@@ -19,9 +20,20 @@ type ModalFormData = {
 export default function CatalogCallItemPopup ({camera, onCloseModal}: CatalogCallItemPopupProps): JSX.Element {
   useScrollLock();
 
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm<ModalFormData>();
   const [isValidateChecked, setValidateChecked] = useState(false);
+  const [isButtonDisabled, setButtonDisabled] = useState(false);
+
   const dispatch = useAppDispatch();
+  const isSubmitting = useAppSelector(getSubmittingStatus);
+
+  useEffect(() => {
+    if (isSubmitting) {
+      setButtonDisabled(true);
+    } else {
+      setButtonDisabled(false);
+    }
+  }, [isSubmitting]);
 
   useEffect(() => {
     function onKeyPressed (evt: KeyboardEvent) {
@@ -89,7 +101,10 @@ export default function CatalogCallItemPopup ({camera, onCloseModal}: CatalogCal
                 <p className="basket-item__price"><span className="visually-hidden">Цена:</span>{camera.price} ₽</p>
               </div>
             </div>
-            <form id="hook-form" onSubmit={handleSubmit(onSubmit)}>
+            <form id="hook-form" onSubmit={(evt) => {
+              void handleSubmit(onSubmit)(evt);
+            }}
+            >
               <div className={`custom-input ${!isValidateChecked ? 'default' : ''} ${isFormValid()}`}>
                 <div className="custom-input form-review__item">
                   <label>
@@ -114,13 +129,13 @@ export default function CatalogCallItemPopup ({camera, onCloseModal}: CatalogCal
             </form>
             <br />
             <div className="modal__buttons">
-              <button className="btn btn--purple modal__btn modal__btn--fit-width" form='hook-form' type="submit">
+              <button className="btn btn--purple modal__btn modal__btn--fit-width" form='hook-form' type="submit" disabled={isButtonDisabled}>
                 <svg width="24" height="16" aria-hidden="true">
                   <use xlinkHref="#icon-add-basket"></use>
                 </svg>Заказать
               </button>
             </div>
-            <button className="cross-btn" type="button" aria-label="Закрыть попап" onClick={onCloseModal}>
+            <button className="cross-btn" type="button" aria-label="Закрыть попап" onClick={onCloseModal} disabled={isButtonDisabled}>
               <svg width="10" height="10" aria-hidden="true">
                 <use xlinkHref="#icon-close"></use>
               </svg>

@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { withRouter } from '../../utils/mock-components';
 import Footer from './footer';
 
-describe('Component: NotFoundScreen', () => {
+describe('Component: Footer', () => {
   it('should render correctly', () => {
     const expectedDescriptionText = 'Интернет-магазин фото- и видеотехники';
     const expectedLinkText = 'Курсы операторов';

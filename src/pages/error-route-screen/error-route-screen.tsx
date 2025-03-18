@@ -3,7 +3,6 @@ function ErrorRouteScreen (): JSX.Element {
     <>
       <h1>404 Not Found</h1>
       <br />
-      
     </>
   );
 }

@@ -1,5 +1,5 @@
-import { store } from '../store/index.js';
-import { CameraInfo, PromoInfo, ReviewInfo } from './camera.js';
+import { store } from '../store/index';
+import { CameraInfo, PromoInfo, ReviewInfo } from './camera';
 
 export type CameraData = {
   cameras: CameraInfo[];

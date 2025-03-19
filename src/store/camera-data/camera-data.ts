@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction} from '@reduxjs/toolkit';
 import { NameSpace } from '../../const';
 import { CameraData } from '../../types/state';
 import { checkCouponAction, fetchCameraByIdAction, fetchCamerasAction, fetchPromoCamerasAction, fetchReviewsByIdAction, fetchSimilarCamerasByIdAction, orderCameraAction, postReviewAction } from '../api-actions/api-actions';

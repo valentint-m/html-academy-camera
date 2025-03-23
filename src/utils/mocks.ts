@@ -1,3 +1,7 @@
+import { ThunkDispatch } from 'redux-thunk';
+import { Action } from 'redux';
+import { State } from '../types/state';
+import { createAPI } from '../services/api';
 import { system, name, internet, date } from 'faker';
 import { CameraInfo, PromoInfo, ReviewInfo } from '../types/camera';
 
@@ -36,3 +40,7 @@ export const makeFakePromo = (): PromoInfo => ({
   previewImgWebp: system.filePath(),
   previewImgWebp2x: system.filePath(),
 } as PromoInfo);
+
+export type AppThunkDispatch = ThunkDispatch<State, ReturnType<typeof createAPI>, Action>;
+
+export const extractActionsTypes = (actions: Action<string>[]) => actions.map(({ type }) => type);

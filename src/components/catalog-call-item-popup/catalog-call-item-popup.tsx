@@ -23,6 +23,7 @@ export default function CatalogCallItemPopup ({camera, onCloseModal}: CatalogCal
   const { register, handleSubmit, formState: { errors } } = useForm<ModalFormData>();
   const [isValidateChecked, setValidateChecked] = useState(false);
   const [isButtonDisabled, setButtonDisabled] = useState(false);
+  const [isOrderError, setOrderError] = useState(false);
 
   const dispatch = useAppDispatch();
   const isSubmitting = useAppSelector(getSubmittingStatus);
@@ -61,7 +62,7 @@ export default function CatalogCallItemPopup ({camera, onCloseModal}: CatalogCal
     return isValidateChecked && errors.userTel ? 'is-invalid' : 'is-valid';
   }
 
-  function onSubmit (data: ModalFormData) {
+  async function onSubmit (data: ModalFormData) {
     let formattedUserTel = data.userTel;
 
     if (formattedUserTel.length !== PHONE_NUMBER_WITH_PLUS_LENGTH) {
@@ -74,7 +75,13 @@ export default function CatalogCallItemPopup ({camera, onCloseModal}: CatalogCal
       tel: formattedUserTel,
     };
 
-    dispatch(orderCameraAction(orderInfo));
+    try {
+      await dispatch(orderCameraAction(orderInfo)).unwrap();
+      onCloseModal();
+    } catch (error) {
+      setOrderError(true);
+    }
+
   }
 
   return (
@@ -84,6 +91,7 @@ export default function CatalogCallItemPopup ({camera, onCloseModal}: CatalogCal
           <div className="modal__overlay" onClick={onCloseModal}></div>
           <div className="modal__content">
             <p className="title title--h4">Свяжитесь со мной</p>
+            { isOrderError && <p>Ошибка!</p> }
             <div className="basket-item basket-item--short">
               <div className="basket-item__img">
                 <picture>

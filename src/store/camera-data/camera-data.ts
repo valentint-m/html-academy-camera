@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction} from '@reduxjs/toolkit';
 import { NameSpace } from '../../const';
 import { CameraData } from '../../types/state';
-import { checkCouponAction, fetchCameraByIdAction, fetchCamerasAction, fetchPromoCamerasAction, fetchReviewsByIdAction, fetchSimilarCamerasByIdAction, orderCameraAction, postReviewAction } from '../api-actions/api-actions';
+import { fetchCameraByIdAction, fetchCamerasAction, fetchPromoCamerasAction, fetchReviewsByIdAction, fetchSimilarCamerasByIdAction, orderCameraAction } from '../api-actions/api-actions';
 import { CameraInfo, PromoInfo, ReviewInfo } from '../../types/camera';
 
 const initialState: CameraData = {
@@ -93,16 +93,6 @@ export const cameraData = createSlice({
       .addCase(fetchPromoCamerasAction.rejected, (state) => {
         state.hasError = true;
       })
-      .addCase(postReviewAction.pending, (state) => {
-        state.isSubmitting = true;
-        state.hasError = false;
-      })
-      .addCase(postReviewAction.fulfilled, (state) => {
-        state.isSubmitting = false;
-      })
-      .addCase(postReviewAction.rejected, (state) => {
-        state.isSubmitting = false;
-      })
       .addCase(orderCameraAction.pending, (state) => {
         state.isSubmitting = true;
         state.hasError = false;
@@ -111,16 +101,6 @@ export const cameraData = createSlice({
         state.isSubmitting = false;
       })
       .addCase(orderCameraAction.rejected, (state) => {
-        state.isSubmitting = false;
-      })
-      .addCase(checkCouponAction.pending, (state) => {
-        state.isSubmitting = true;
-        state.hasError = false;
-      })
-      .addCase(checkCouponAction.fulfilled, (state) => {
-        state.isSubmitting = false;
-      })
-      .addCase(checkCouponAction.rejected, (state) => {
         state.isSubmitting = false;
       });
   }

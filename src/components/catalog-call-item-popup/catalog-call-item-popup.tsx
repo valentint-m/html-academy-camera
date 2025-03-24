@@ -29,11 +29,20 @@ export default function CatalogCallItemPopup ({camera, onCloseModal}: CatalogCal
   const isSubmitting = useAppSelector(getSubmittingStatus);
 
   useEffect(() => {
-    if (isSubmitting) {
-      setButtonDisabled(true);
-    } else {
-      setButtonDisabled(false);
+    let isMounted = true;
+
+    if (isMounted) {
+      if (isSubmitting) {
+        setButtonDisabled(true);
+      } else {
+        setButtonDisabled(false);
+      }
     }
+
+    return () => {
+      isMounted = false;
+    };
+
   }, [isSubmitting]);
 
   useEffect(() => {

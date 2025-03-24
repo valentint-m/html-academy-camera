@@ -5,6 +5,7 @@ import { getCameraById, getReviews } from '../../store/camera-data/camera-data-s
 import { useEffect, useState } from 'react';
 import { fetchCameraByIdAction, fetchReviewsByIdAction } from '../../store/api-actions/api-actions';
 import { Path, REVIEWS_COUNT_DEFAULT, SCROLL_UP_COORD } from '../../const';
+import { getDocumentTitle } from '../../utils/utils';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
 import ReviewList from '../../components/review-list/review-list';
@@ -18,6 +19,17 @@ export default function ProductScreen (): JSX.Element {
 
   const cameraById: CameraInfo = useAppSelector(getCameraById);
   const reviewsById: ReviewInfo[] = useAppSelector(getReviews);
+
+  useEffect(() => {
+    if (pageId !== cameraById.id && pageId) {
+      dispatch(fetchCameraByIdAction(pageId));
+      dispatch(fetchReviewsByIdAction(pageId));
+    }
+  }, [pageId, cameraById.id, dispatch]);
+
+  useEffect(() => {
+    document.title = getDocumentTitle(cameraById.name);
+  }, [cameraById.name]);
 
   function handleShowMoreReviewsButtonClick () {
     setShowCount(showCount + REVIEWS_COUNT_DEFAULT);
@@ -38,13 +50,6 @@ export default function ProductScreen (): JSX.Element {
       behavior: 'smooth'
     });
   }
-
-  useEffect(() => {
-    if (pageId !== cameraById.id && pageId) {
-      dispatch(fetchCameraByIdAction(pageId));
-      dispatch(fetchReviewsByIdAction(pageId));
-    }
-  }, [pageId, cameraById.id, dispatch]);
 
   return (
     <div className="wrapper">

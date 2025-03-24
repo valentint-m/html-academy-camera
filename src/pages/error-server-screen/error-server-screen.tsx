@@ -1,8 +1,15 @@
+import { useEffect } from 'react';
 import { useAppDispatch } from '../../hooks';
 import { fetchCamerasAction } from '../../store/api-actions/api-actions';
+import { getDocumentTitle } from '../../utils/utils';
+import { DocumentTitle } from '../../const';
 
 function ErrorServerScreen(): JSX.Element {
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    document.title = getDocumentTitle(DocumentTitle.ErrorServer);
+  }, []);
 
   return (
     <>

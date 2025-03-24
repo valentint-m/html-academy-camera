@@ -1,4 +1,4 @@
-import { ApiRoute, PRODUCT_PATH } from '../const';
+import { ApiRoute, DEFAULT_DOCUMENT_TITLE, PRODUCT_PATH } from '../const';
 import { ReviewInfo } from '../types/camera';
 
 function getCameraUrlById (id: number) {
@@ -30,7 +30,7 @@ function getFormattedDate (dateString: string) {
   return formattedDate;
 }
 
-function sortReviewsByLatest(reviews: ReviewInfo[]) {
+function sortReviewsByLatest (reviews: ReviewInfo[]) {
   const reviewsCopy = Array.from(reviews);
 
   const sortedReviews = reviewsCopy.sort((reviewsA, reviewsB) => {
@@ -41,4 +41,8 @@ function sortReviewsByLatest(reviews: ReviewInfo[]) {
   return sortedReviews;
 }
 
-export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, getFormattedDate, sortReviewsByLatest };
+function getDocumentTitle (pageName: string) {
+  return `${pageName} - ${DEFAULT_DOCUMENT_TITLE}`;
+}
+
+export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, getFormattedDate, sortReviewsByLatest, getDocumentTitle };

@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppSelector } from '../../hooks';
 import { getCameras, getPromoCameras, getSubmittingStatus } from '../../store/camera-data/camera-data-selectors';
 import { CameraInfo } from '../../types/camera';
 import { Link } from 'react-router-dom';
-import { getCameraPathById } from '../../utils/utils';
+import { getCameraPathById, getDocumentTitle } from '../../utils/utils';
+import { DocumentTitle } from '../../const';
 import CatalogCallItemPopup from '../../components/catalog-call-item-popup/catalog-call-item-popup';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
 import ProductList from '../../components/product-list/product-list';
+
 
 export default function CatalogScreen (): JSX.Element {
   const [selectedCamera, setCamera] = useState<CameraInfo | undefined>(undefined);
@@ -16,6 +18,10 @@ export default function CatalogScreen (): JSX.Element {
   const cameras = useAppSelector(getCameras);
   const promoCamera = useAppSelector(getPromoCameras)[0];
   const isSubmitting = useAppSelector(getSubmittingStatus);
+
+  useEffect(() => {
+    document.title = getDocumentTitle(DocumentTitle.Catalog);
+  }, []);
 
   function getPromoCameraInfo (promoId: number): CameraInfo | undefined {
     return cameras.find((camera) => camera.id === promoId);

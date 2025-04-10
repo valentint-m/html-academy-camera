@@ -1,21 +1,25 @@
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useAppSelector } from '../../hooks';
 import { getCameras, getPromoCameras, getSubmittingStatus } from '../../store/camera-data/camera-data-selectors';
 import { CameraInfo } from '../../types/camera';
 import { Link } from 'react-router-dom';
-import { getCameraPathById, getDocumentTitle } from '../../utils/utils';
-import { DocumentTitle } from '../../const';
+import { getCameraPathById, getDocumentTitle, sortCamerasByTypeAndDirection } from '../../utils/utils';
+import { DocumentTitle, SortDirection, SortType } from '../../const';
 import CatalogCallItemPopup from '../../components/catalog-call-item-popup/catalog-call-item-popup';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
 import ProductList from '../../components/product-list/product-list';
+import CatalogSort from '../../components/catalog-sort/catalog-sort';
 
 
 export default function CatalogScreen (): JSX.Element {
   const [selectedCamera, setCamera] = useState<CameraInfo | undefined>(undefined);
   const [isPopupActive, setPopupActive] = useState(false);
 
-  const cameras = useAppSelector(getCameras);
+  const [sortType, setSortType] = useState<SortType>(SortType.Price);
+  const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.Up);
+
+  const cameras = sortCamerasByTypeAndDirection(useAppSelector(getCameras), sortType, sortDirection);
   const promoCamera = useAppSelector(getPromoCameras)[0];
   const isSubmitting = useAppSelector(getSubmittingStatus);
 
@@ -25,6 +29,27 @@ export default function CatalogScreen (): JSX.Element {
 
   function getPromoCameraInfo (promoId: number): CameraInfo | undefined {
     return cameras.find((camera) => camera.id === promoId);
+  }
+
+  function handleSortInputChange (evt: ChangeEvent<HTMLInputElement>) {
+    const id = evt.target.id;
+
+    switch (id) {
+      case 'down':
+        setSortDirection(SortDirection.Down);
+        break;
+      case 'up':
+        setSortDirection(SortDirection.Up);
+        break;
+      case 'sortPopular':
+        setSortType(SortType.ReviewCount);
+        break;
+      case 'sortPrice':
+        setSortType(SortType.Price);
+        break;
+      default:
+        break;
+    }
   }
 
   function handleCallButtonClick (camera: CameraInfo) {
@@ -71,7 +96,7 @@ export default function CatalogScreen (): JSX.Element {
                 <div className="catalog__aside"><img src="img/banner.png" />
                 </div>
                 <div className="catalog__content">
-
+                  <CatalogSort sortType={sortType} sortDirection={sortDirection} onInputChange={handleSortInputChange}/>
                   <ProductList cameras={cameras} handleCallButtonClick={handleCallButtonClick} />
 
                 </div>

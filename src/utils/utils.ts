@@ -1,5 +1,5 @@
-import { ApiRoute, DEFAULT_DOCUMENT_TITLE, PRODUCT_PATH } from '../const';
-import { ReviewInfo } from '../types/camera';
+import { ApiRoute, DEFAULT_DOCUMENT_TITLE, PRODUCT_PATH, SortDirection, SortType } from '../const';
+import { CameraInfo, ReviewInfo } from '../types/camera';
 
 function getCameraUrlById (id: number) {
   return `${ApiRoute.Cameras}${id}`;
@@ -30,6 +30,10 @@ function getFormattedDate (dateString: string) {
   return formattedDate;
 }
 
+function getDocumentTitle (pageName: string) {
+  return `${pageName} - ${DEFAULT_DOCUMENT_TITLE}`;
+}
+
 function sortReviewsByLatest (reviews: ReviewInfo[]) {
   const reviewsCopy = Array.from(reviews);
 
@@ -41,8 +45,21 @@ function sortReviewsByLatest (reviews: ReviewInfo[]) {
   return sortedReviews;
 }
 
-function getDocumentTitle (pageName: string) {
-  return `${pageName} - ${DEFAULT_DOCUMENT_TITLE}`;
+function sortCamerasByTypeAndDirection (cameras: CameraInfo[], type: SortType, direction: SortDirection) {
+  const camerasCopy = Array.from(cameras);
+
+  switch (direction) {
+    case SortDirection.Up:
+      camerasCopy.sort((cameraA, cameraB) => cameraA[type] - cameraB[type]);
+      break;
+    case SortDirection.Down:
+      camerasCopy.sort((cameraA, cameraB) => cameraB[type] - cameraA[type]);
+      break;
+    default:
+      break;
+  }
+
+  return camerasCopy;
 }
 
-export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, getFormattedDate, sortReviewsByLatest, getDocumentTitle };
+export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, getFormattedDate, getDocumentTitle, sortReviewsByLatest, sortCamerasByTypeAndDirection };

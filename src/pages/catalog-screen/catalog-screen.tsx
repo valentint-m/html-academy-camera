@@ -10,6 +10,7 @@ import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
 import ProductList from '../../components/product-list/product-list';
 import CatalogSort from '../../components/catalog-sort/catalog-sort';
+import CatalogFilter from '../../components/catalog-filter/catalog-filter';
 
 
 export default function CatalogScreen (): JSX.Element {
@@ -93,7 +94,8 @@ export default function CatalogScreen (): JSX.Element {
             <div className="container">
               <h1 className="title title--h2">Каталог фото- и видеотехники</h1>
               <div className="page-content__columns">
-                <div className="catalog__aside"><img src="img/banner.png" />
+                <div className="catalog__aside">
+                  <CatalogFilter />
                 </div>
                 <div className="catalog__content">
                   <CatalogSort sortType={sortType} sortDirection={sortDirection} onInputChange={handleSortInputChange}/>

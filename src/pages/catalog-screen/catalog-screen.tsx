@@ -4,7 +4,7 @@ import { getCameras, getPromoCameras, getSubmittingStatus } from '../../store/ca
 import { CameraInfo } from '../../types/camera';
 import { Link } from 'react-router-dom';
 import { getCameraPathById, getDocumentTitle, sortCamerasByTypeAndDirection } from '../../utils/utils';
-import { DocumentTitle, SortDirection, SortType } from '../../const';
+import { DocumentTitle, FilterCameraCategory, FilterCameraLevel, FilterCameraType, SortDirection, SortType } from '../../const';
 import CatalogCallItemPopup from '../../components/catalog-call-item-popup/catalog-call-item-popup';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
@@ -19,6 +19,10 @@ export default function CatalogScreen (): JSX.Element {
 
   const [sortType, setSortType] = useState<SortType>(SortType.Price);
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.Up);
+
+  const [filterCameraCategory, setFilterCameraCategory] = useState<FilterCameraCategory>(FilterCameraCategory.None);
+  const [filterCameraType, setFilterCameraType] = useState<FilterCameraType>(FilterCameraType.None);
+  const [filterCameraLevel, setFilterCameraLevel] = useState<FilterCameraLevel>(FilterCameraLevel.None);
 
   const cameras = sortCamerasByTypeAndDirection(useAppSelector(getCameras), sortType, sortDirection);
   const promoCamera = useAppSelector(getPromoCameras)[0];
@@ -51,6 +55,50 @@ export default function CatalogScreen (): JSX.Element {
       default:
         break;
     }
+  }
+
+  function handleFilterInputChange (evt: ChangeEvent<HTMLInputElement>) {
+    const name = evt.target.name;
+
+    const filterCategoryNames = Array.from(Object.values(FilterCameraCategory));
+
+    if (name === 'category') {
+      const value = evt.target.value;
+      const selectedFilterCameraCategory = filterCategoryNames.find((category) => category === value);
+
+      if (selectedFilterCameraCategory) {
+        setFilterCameraCategory(selectedFilterCameraCategory);
+      }
+
+      if (selectedFilterCameraCategory === FilterCameraCategory.VideoCamera && filterCameraType === FilterCameraType.Film || filterCameraType === FilterCameraType.Snapshot) {
+        setFilterCameraType(FilterCameraType.None);
+      }
+
+      return;
+    }
+
+    const filterTypeNames = Object.values(FilterCameraType);
+    const filterLevelNames = Object.values(FilterCameraLevel);
+
+    const selectedFilterCameraType = filterTypeNames.find((type) => type === name);
+    const selectedFilterCameraLevel = filterLevelNames.find((level) => level === name);
+
+    if (selectedFilterCameraType) {
+      setFilterCameraType(selectedFilterCameraType);
+
+      return;
+    }
+
+    if (selectedFilterCameraLevel) {
+      setFilterCameraLevel(selectedFilterCameraLevel);
+    }
+
+  }
+
+  function handleFilterResetButtonClick () {
+    setFilterCameraCategory(FilterCameraCategory.None);
+    setFilterCameraType(FilterCameraType.None);
+    setFilterCameraLevel(FilterCameraLevel.None);
   }
 
   function handleCallButtonClick (camera: CameraInfo) {
@@ -95,9 +143,12 @@ export default function CatalogScreen (): JSX.Element {
               <h1 className="title title--h2">Каталог фото- и видеотехники</h1>
               <div className="page-content__columns">
                 <div className="catalog__aside">
-                  <CatalogFilter />
+
+                  <CatalogFilter category={filterCameraCategory} type={filterCameraType} level={filterCameraLevel} onInputChange={handleFilterInputChange} onResetButtonClick={handleFilterResetButtonClick}/>
+
                 </div>
                 <div className="catalog__content">
+
                   <CatalogSort sortType={sortType} sortDirection={sortDirection} onInputChange={handleSortInputChange}/>
                   <ProductList cameras={cameras} handleCallButtonClick={handleCallButtonClick} />
 

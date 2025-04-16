@@ -1,9 +1,9 @@
-enum NameSpace {
+export enum NameSpace {
   Data = 'DATA',
   User = 'USER',
 }
 
-enum ApiRoute {
+export enum ApiRoute {
   Coupons = '/coupons',
   Orders = '/orders',
   Promo = '/promo',
@@ -12,45 +12,66 @@ enum ApiRoute {
   Reviews = '/reviews',
 }
 
-enum Path {
+export enum Path {
   Main = '/',
   Catalog = '/catalog',
   Basket = '/basket',
   Product = '/product/:id',
 }
 
-enum PhoneNumberCode {
+export enum PhoneNumberCode {
   PlusCode = '+7',
   NoPlusCode = '8',
 }
 
-enum DocumentTitle {
+export enum DocumentTitle {
   Catalog = 'Каталог',
   Loading = 'Загрузка',
   ErrorServer = 'Ошибка загрузки',
   ErrorRoute = '404',
 }
 
-enum SortType {
+export enum SortType {
   ReviewCount = 'reviewCount',
   Price = 'price',
 }
 
-enum SortDirection {
+export enum SortDirection {
   Up = 'Up',
   Down = 'Down',
 }
 
-const DEFAULT_DOCUMENT_TITLE = 'Фотошоп';
+export enum FilterCameraCategory {
+  None = 'none',
+  PhotoCamera = 'photocamera',
+  VideoCamera = 'videocamera',
+}
 
-const PHONE_NUMBER_WITH_PLUS_LENGTH = 12;
+export enum FilterCameraType {
+  None = 'none',
+  Digital = 'digital',
+  Film = 'film',
+  Snapshot = 'snapshot',
+  Collection = 'collection',
+}
 
-const PRODUCT_PATH = '/product/';
+export enum FilterCameraLevel {
+  None = 'none',
+  Zero = 'zero',
+  NonProfessional = 'non-professional',
+  Professional = 'professional',
+}
 
-const SCROLL_UP_COORD = 0;
+export const DEFAULT_DOCUMENT_TITLE = 'Фотошоп';
 
-const REVIEWS_COUNT_DEFAULT = 3;
+export const PHONE_NUMBER_WITH_PLUS_LENGTH = 12;
 
-const ESCAPE_KEY = 'Escape';
+export const PRODUCT_PATH = '/product/';
 
-export { NameSpace, ApiRoute, Path, PhoneNumberCode, DocumentTitle, SortType, SortDirection, PRODUCT_PATH, REVIEWS_COUNT_DEFAULT, SCROLL_UP_COORD, ESCAPE_KEY, PHONE_NUMBER_WITH_PLUS_LENGTH, DEFAULT_DOCUMENT_TITLE };
+export const SCROLL_UP_COORD = 0;
+
+export const REVIEWS_COUNT_DEFAULT = 3;
+
+export const ESCAPE_KEY = 'Escape';
+
+

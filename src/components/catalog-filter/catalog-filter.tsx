@@ -1,4 +1,15 @@
-export default function CatalogFilter (): JSX.Element {
+import { ChangeEvent } from 'react';
+import { FilterCameraCategory, FilterCameraLevel, FilterCameraType } from '../../const';
+
+type CatalogFilterProps = {
+  category: FilterCameraCategory;
+  type: FilterCameraType;
+  level: FilterCameraLevel;
+  onInputChange: (evt: ChangeEvent<HTMLInputElement>) => void;
+  onResetButtonClick: () => void;
+}
+
+export default function CatalogFilter ({category, type, level, onInputChange, onResetButtonClick}: CatalogFilterProps): JSX.Element {
   return (
     <div className="catalog-filter">
       <form action="#">
@@ -22,12 +33,12 @@ export default function CatalogFilter (): JSX.Element {
           <legend className="title title&#45;&#45;h5">Категория</legend>
           <div className="custom-radio catalog-filter__item">
             <label>
-              <input type="radio" name="category" value="photocamera" checked /><span className="custom-radio__icon"></span><span className="custom-radio__label">Фотокамера</span>
+              <input type="radio" name="category" value="photocamera" checked={category === FilterCameraCategory.PhotoCamera} onChange={onInputChange} /><span className="custom-radio__icon"></span><span className="custom-radio__label">Фотокамера</span>
             </label>
           </div>
           <div className="custom-radio catalog-filter__item">
             <label>
-              <input type="radio" name="category" value="videocamera" /><span className="custom-radio__icon"></span><span className="custom-radio__label">Видеокамера</span>
+              <input type="radio" name="category" value="videocamera" checked={category === FilterCameraCategory.VideoCamera} onChange={onInputChange} /><span className="custom-radio__icon"></span><span className="custom-radio__label">Видеокамера</span>
             </label>
           </div>
         </fieldset>
@@ -35,22 +46,22 @@ export default function CatalogFilter (): JSX.Element {
           <legend className="title title&#45;&#45;h5">Тип камеры</legend>
           <div className="custom-checkbox catalog-filter__item">
             <label>
-              <input type="checkbox" name="digital" checked /><span className="custom-checkbox__icon"></span><span className="custom-checkbox__label">Цифровая</span>
+              <input type="checkbox" name="digital" checked={type === FilterCameraType.Digital} onChange={onInputChange} /><span className="custom-checkbox__icon"></span><span className="custom-checkbox__label">Цифровая</span>
             </label>
           </div>
           <div className="custom-checkbox catalog-filter__item">
             <label>
-              <input type="checkbox" name="film" disabled /><span className="custom-checkbox__icon"></span><span className="custom-checkbox__label">Плёночная</span>
+              <input type="checkbox" name="film" checked={type === FilterCameraType.Film} disabled={category === FilterCameraCategory.VideoCamera} onChange={onInputChange} /><span className="custom-checkbox__icon"></span><span className="custom-checkbox__label">Плёночная</span>
             </label>
           </div>
           <div className="custom-checkbox catalog-filter__item">
             <label>
-              <input type="checkbox" name="snapshot" /><span className="custom-checkbox__icon"></span><span className="custom-checkbox__label">Моментальная</span>
+              <input type="checkbox" name="snapshot" checked={type === FilterCameraType.Snapshot} disabled={category === FilterCameraCategory.VideoCamera} onChange={onInputChange} /><span className="custom-checkbox__icon"></span><span className="custom-checkbox__label">Моментальная</span>
             </label>
           </div>
           <div className="custom-checkbox catalog-filter__item">
             <label>
-              <input type="checkbox" name="collection" checked disabled /><span className="custom-checkbox__icon"></span><span className="custom-checkbox__label">Коллекционная</span>
+              <input type="checkbox" name="collection" checked={type === FilterCameraType.Collection} onChange={onInputChange} /><span className="custom-checkbox__icon"></span><span className="custom-checkbox__label">Коллекционная</span>
             </label>
           </div>
         </fieldset>
@@ -58,21 +69,21 @@ export default function CatalogFilter (): JSX.Element {
           <legend className="title title&#45;&#45;h5">Уровень</legend>
           <div className="custom-checkbox catalog-filter__item">
             <label>
-              <input type="checkbox" name="zero" checked /><span className="custom-checkbox__icon"></span><span className="custom-checkbox__label">Нулевой</span>
+              <input type="checkbox" name="zero" checked={level === FilterCameraLevel.Zero} onChange={onInputChange} /><span className="custom-checkbox__icon"></span><span className="custom-checkbox__label">Нулевой</span>
             </label>
           </div>
           <div className="custom-checkbox catalog-filter__item">
             <label>
-              <input type="checkbox" name="non-professional" /><span className="custom-checkbox__icon"></span><span className="custom-checkbox__label">Любительский</span>
+              <input type="checkbox" name="non-professional" checked={level === FilterCameraLevel.NonProfessional} onChange={onInputChange} /><span className="custom-checkbox__icon"></span><span className="custom-checkbox__label">Любительский</span>
             </label>
           </div>
           <div className="custom-checkbox catalog-filter__item">
             <label>
-              <input type="checkbox" name="professional" /><span className="custom-checkbox__icon"></span><span className="custom-checkbox__label">Профессиональный</span>
+              <input type="checkbox" name="professional" checked={level === FilterCameraLevel.Professional} onChange={onInputChange} /><span className="custom-checkbox__icon"></span><span className="custom-checkbox__label">Профессиональный</span>
             </label>
           </div>
         </fieldset>
-        <button className="btn catalog-filter__reset-btn" type="reset">Сбросить фильтры
+        <button className="btn catalog-filter__reset-btn" type="reset" onClick={onResetButtonClick}>Сбросить фильтры
         </button>
       </form>
     </div>

@@ -62,4 +62,19 @@ function sortCamerasByTypeAndDirection (cameras: CameraInfo[], type: SortType, d
   return camerasCopy;
 }
 
-export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, getFormattedDate, getDocumentTitle, sortReviewsByLatest, sortCamerasByTypeAndDirection };
+function getArrayWithNewOrDeletedElement<TypeElement>(array: TypeElement[], element: TypeElement): TypeElement[] {
+  const arrayCopy = [...array];
+
+  if (arrayCopy.includes(element)) {
+    const elementIndex = arrayCopy.findIndex((value) => value === element);
+    arrayCopy.splice(elementIndex, 1);
+
+  } else {
+    arrayCopy.push(element);
+  }
+
+  return arrayCopy;
+}
+
+
+export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, getFormattedDate, getDocumentTitle, sortReviewsByLatest, sortCamerasByTypeAndDirection, getArrayWithNewOrDeletedElement };

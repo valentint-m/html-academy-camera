@@ -3,7 +3,7 @@ import { useAppSelector } from '../../hooks';
 import { getCameras, getPromoCameras, getSubmittingStatus } from '../../store/camera-data/camera-data-selectors';
 import { CameraInfo } from '../../types/camera';
 import { Link } from 'react-router-dom';
-import { getCameraPathById, getDocumentTitle, sortCamerasByTypeAndDirection } from '../../utils/utils';
+import { getArrayWithNewOrDeletedElement, getCameraPathById, getDocumentTitle, sortCamerasByTypeAndDirection } from '../../utils/utils';
 import { DocumentTitle, FilterCameraCategory, FilterCameraLevel, FilterCameraType, SortDirection, SortType } from '../../const';
 import CatalogCallItemPopup from '../../components/catalog-call-item-popup/catalog-call-item-popup';
 import Footer from '../../components/footer/footer';
@@ -84,15 +84,7 @@ export default function CatalogScreen (): JSX.Element {
     const selectedFilterCameraLevel = filterLevelNames.find((level) => level === name);
 
     if (selectedFilterCameraType) {
-      const filterCameraTypesCopy = [...filterCameraTypes];
-
-      if (filterCameraTypesCopy.includes(selectedFilterCameraType)) {
-        const selectedFilterCameraTypeIndex = filterCameraTypesCopy.findIndex((value) => value === selectedFilterCameraType);
-        filterCameraTypesCopy.splice(selectedFilterCameraTypeIndex, 1);
-
-      } else {
-        filterCameraTypesCopy.push(selectedFilterCameraType);
-      }
+      const filterCameraTypesCopy = getArrayWithNewOrDeletedElement<FilterCameraType>(filterCameraTypes, selectedFilterCameraType);
 
       setFilterCameraTypes(filterCameraTypesCopy);
 
@@ -100,15 +92,7 @@ export default function CatalogScreen (): JSX.Element {
     }
 
     if (selectedFilterCameraLevel) {
-      const filterCameraLevelsCopy = [...filterCameraLevels];
-
-      if (filterCameraLevelsCopy.includes(selectedFilterCameraLevel)) {
-        const selectedFilterCameraLevelIndex = filterCameraLevelsCopy.findIndex((value) => value === selectedFilterCameraLevel);
-        filterCameraLevelsCopy.splice(selectedFilterCameraLevelIndex, 1);
-
-      } else {
-        filterCameraLevelsCopy.push(selectedFilterCameraLevel);
-      }
+      const filterCameraLevelsCopy = getArrayWithNewOrDeletedElement<FilterCameraLevel>(filterCameraLevels, selectedFilterCameraLevel);
 
       setFilterCameraLevels(filterCameraLevelsCopy);
 

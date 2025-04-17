@@ -48,7 +48,6 @@ export enum FilterCameraCategory {
 }
 
 export enum FilterCameraType {
-  None = 'none',
   Digital = 'digital',
   Film = 'film',
   Snapshot = 'snapshot',
@@ -56,7 +55,6 @@ export enum FilterCameraType {
 }
 
 export enum FilterCameraLevel {
-  None = 'none',
   Zero = 'zero',
   NonProfessional = 'non-professional',
   Professional = 'professional',

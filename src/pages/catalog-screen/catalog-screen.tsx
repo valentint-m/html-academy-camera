@@ -21,8 +21,8 @@ export default function CatalogScreen (): JSX.Element {
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.Up);
 
   const [filterCameraCategory, setFilterCameraCategory] = useState<FilterCameraCategory>(FilterCameraCategory.None);
-  const [filterCameraType, setFilterCameraType] = useState<FilterCameraType>(FilterCameraType.None);
-  const [filterCameraLevel, setFilterCameraLevel] = useState<FilterCameraLevel>(FilterCameraLevel.None);
+  const [filterCameraTypes, setFilterCameraTypes] = useState<FilterCameraType[]>([]);
+  const [filterCameraLevels, setFilterCameraLevels] = useState<FilterCameraLevel[]>([]);
 
   const cameras = sortCamerasByTypeAndDirection(useAppSelector(getCameras), sortType, sortDirection);
   const promoCamera = useAppSelector(getPromoCameras)[0];
@@ -70,8 +70,8 @@ export default function CatalogScreen (): JSX.Element {
         setFilterCameraCategory(selectedFilterCameraCategory);
       }
 
-      if (selectedFilterCameraCategory === FilterCameraCategory.VideoCamera && filterCameraType === FilterCameraType.Film || filterCameraType === FilterCameraType.Snapshot) {
-        setFilterCameraType(FilterCameraType.None);
+      if (selectedFilterCameraCategory === FilterCameraCategory.VideoCamera && filterCameraTypes.includes(FilterCameraType.Film) || filterCameraTypes.includes(FilterCameraType.Snapshot)) {
+        setFilterCameraTypes([]);
       }
 
       return;
@@ -84,21 +84,42 @@ export default function CatalogScreen (): JSX.Element {
     const selectedFilterCameraLevel = filterLevelNames.find((level) => level === name);
 
     if (selectedFilterCameraType) {
-      setFilterCameraType(selectedFilterCameraType);
+      const filterCameraTypesCopy = [...filterCameraTypes];
+
+      if (filterCameraTypesCopy.includes(selectedFilterCameraType)) {
+        const selectedFilterCameraTypeIndex = filterCameraTypesCopy.findIndex((value) => value === selectedFilterCameraType);
+        filterCameraTypesCopy.splice(selectedFilterCameraTypeIndex, 1);
+
+      } else {
+        filterCameraTypesCopy.push(selectedFilterCameraType);
+      }
+
+      setFilterCameraTypes(filterCameraTypesCopy);
 
       return;
     }
 
     if (selectedFilterCameraLevel) {
-      setFilterCameraLevel(selectedFilterCameraLevel);
+      const filterCameraLevelsCopy = [...filterCameraLevels];
+
+      if (filterCameraLevelsCopy.includes(selectedFilterCameraLevel)) {
+        const selectedFilterCameraLevelIndex = filterCameraLevelsCopy.findIndex((value) => value === selectedFilterCameraLevel);
+        filterCameraLevelsCopy.splice(selectedFilterCameraLevelIndex, 1);
+
+      } else {
+        filterCameraLevelsCopy.push(selectedFilterCameraLevel);
+      }
+
+      setFilterCameraLevels(filterCameraLevelsCopy);
+
     }
 
   }
 
   function handleFilterResetButtonClick () {
     setFilterCameraCategory(FilterCameraCategory.None);
-    setFilterCameraType(FilterCameraType.None);
-    setFilterCameraLevel(FilterCameraLevel.None);
+    setFilterCameraTypes([]);
+    setFilterCameraLevels([]);
   }
 
   function handleCallButtonClick (camera: CameraInfo) {
@@ -144,7 +165,7 @@ export default function CatalogScreen (): JSX.Element {
               <div className="page-content__columns">
                 <div className="catalog__aside">
 
-                  <CatalogFilter category={filterCameraCategory} type={filterCameraType} level={filterCameraLevel} onInputChange={handleFilterInputChange} onResetButtonClick={handleFilterResetButtonClick}/>
+                  <CatalogFilter category={filterCameraCategory} types={filterCameraTypes} levels={filterCameraLevels} onInputChange={handleFilterInputChange} onResetButtonClick={handleFilterResetButtonClick}/>
 
                 </div>
                 <div className="catalog__content">

@@ -41,6 +41,24 @@ export enum SortDirection {
   Down = 'Down',
 }
 
+export enum CameraCategoryRussian {
+  PhotoCamera = 'Фотоаппарат',
+  VideoCamera = 'Видеокамера',
+}
+
+export enum CameraTypeRussian {
+  Digital = 'Цифровая',
+  Film = 'Плёночная',
+  Snapshot = 'Моментальная',
+  Collection = 'Коллекционная',
+}
+
+export enum CameraLevelRussian {
+  Zero = 'Нулевой',
+  NonProfessional = 'Любительский',
+  Professional = 'Профессиональный',
+}
+
 export enum FilterCameraCategory {
   None = 'none',
   PhotoCamera = 'photocamera',

@@ -3,7 +3,7 @@ import { useAppSelector } from '../../hooks';
 import { getCameras, getPromoCameras, getSubmittingStatus } from '../../store/camera-data/camera-data-selectors';
 import { CameraInfo } from '../../types/camera';
 import { Link } from 'react-router-dom';
-import { getArrayWithNewOrDeletedElement, getCameraPathById, getDocumentTitle, sortCamerasByTypeAndDirection } from '../../utils/utils';
+import { filterCameras, getArrayWithNewOrDeletedElement, getCameraPathById, getDocumentTitle, sortCamerasByTypeAndDirection } from '../../utils/utils';
 import { DocumentTitle, FilterCameraCategory, FilterCameraLevel, FilterCameraType, SortDirection, SortType } from '../../const';
 import CatalogCallItemPopup from '../../components/catalog-call-item-popup/catalog-call-item-popup';
 import Footer from '../../components/footer/footer';
@@ -25,6 +25,8 @@ export default function CatalogScreen (): JSX.Element {
   const [filterCameraLevels, setFilterCameraLevels] = useState<FilterCameraLevel[]>([]);
 
   const cameras = sortCamerasByTypeAndDirection(useAppSelector(getCameras), sortType, sortDirection);
+  const filteredCameras = filterCameras(cameras, filterCameraCategory, filterCameraTypes, filterCameraLevels);
+
   const promoCamera = useAppSelector(getPromoCameras)[0];
   const isSubmitting = useAppSelector(getSubmittingStatus);
 
@@ -155,7 +157,7 @@ export default function CatalogScreen (): JSX.Element {
                 <div className="catalog__content">
 
                   <CatalogSort sortType={sortType} sortDirection={sortDirection} onInputChange={handleSortInputChange}/>
-                  <ProductList cameras={cameras} handleCallButtonClick={handleCallButtonClick} />
+                  <ProductList cameras={filteredCameras} handleCallButtonClick={handleCallButtonClick} />
 
                 </div>
               </div>

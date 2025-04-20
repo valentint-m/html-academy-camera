@@ -20,6 +20,8 @@ export default function CatalogScreen (): JSX.Element {
   const [sortType, setSortType] = useState<SortType>(SortType.Price);
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.Up);
 
+  const [wasFilterSelected, setFilterWasSelected] = useState<boolean>(false);
+
   const [filterCameraCategory, setFilterCameraCategory] = useState<FilterCameraCategory>(FilterCameraCategory.None);
   const [filterCameraTypes, setFilterCameraTypes] = useState<FilterCameraType[]>([]);
   const [filterCameraLevels, setFilterCameraLevels] = useState<FilterCameraLevel[]>([]);
@@ -44,6 +46,15 @@ export default function CatalogScreen (): JSX.Element {
     setMinPrice(camerasByPrice[0]?.price);
     setMaxPrice(camerasByPrice.at(-1)?.price);
   }, [cameras]);
+
+  useEffect(() => {
+    if (wasFilterSelected) {
+      const camerasByPrice = [...filteredCameras].sort((cameraA, cameraB) => cameraA.price - cameraB.price);
+      setMinPrice(camerasByPrice[0]?.price);
+      setMaxPrice(camerasByPrice.at(-1)?.price);
+      setFilterWasSelected(false);
+    }
+  }, [filteredCameras, wasFilterSelected]);
 
   function getPromoCameraInfo (promoId: number): CameraInfo | undefined {
     return cameras.find((camera) => camera.id === promoId);
@@ -87,6 +98,8 @@ export default function CatalogScreen (): JSX.Element {
         setFilterCameraTypes([]);
       }
     }
+
+    setFilterWasSelected(true);
   }
 
   function handleFilterTypeChange (evt: ChangeEvent<HTMLInputElement>) {
@@ -101,6 +114,8 @@ export default function CatalogScreen (): JSX.Element {
 
       setFilterCameraTypes(filterCameraTypesCopy);
     }
+
+    setFilterWasSelected(true);
   }
 
   function handleFilterLevelChange (evt: ChangeEvent<HTMLInputElement>) {
@@ -114,8 +129,9 @@ export default function CatalogScreen (): JSX.Element {
       const filterCameraLevelsCopy = getArrayWithNewOrDeletedElement<FilterCameraLevel>(filterCameraLevels, selectedFilterCameraLevel);
 
       setFilterCameraLevels(filterCameraLevelsCopy);
-
     }
+
+    setFilterWasSelected(true);
   }
 
   function handleFilterMinPriceChange (evt: ChangeEvent<HTMLInputElement>) {

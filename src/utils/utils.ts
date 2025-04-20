@@ -129,6 +129,17 @@ function filterCameras (cameras: CameraInfo[], filterCategory: FilterCameraCateg
   return camerasFilteredByCategoryAndTypeAndLevel;
 }
 
+function filterCamerasByPrice (cameras: CameraInfo[], minPrice: number | undefined, maxPrice: number | undefined) {
+  const camerasCopy = Array.from(cameras);
+
+  if (minPrice && maxPrice) {
+    const camerasFilteredByPrice = camerasCopy.filter((camera) => camera.price >= minPrice && camera.price <= maxPrice);
+    return camerasFilteredByPrice;
+  }
+
+  return camerasCopy;
+}
+
 function getArrayWithNewOrDeletedElement<TypeElement>(array: TypeElement[], element: TypeElement): TypeElement[] {
   const arrayCopy = [...array];
 
@@ -144,4 +155,4 @@ function getArrayWithNewOrDeletedElement<TypeElement>(array: TypeElement[], elem
 }
 
 
-export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, getFormattedDate, getDocumentTitle, sortReviewsByLatest, sortCamerasByTypeAndDirection, getArrayWithNewOrDeletedElement, filterCameras };
+export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, getFormattedDate, getDocumentTitle, sortReviewsByLatest, sortCamerasByTypeAndDirection, getArrayWithNewOrDeletedElement, filterCameras, filterCamerasByPrice };

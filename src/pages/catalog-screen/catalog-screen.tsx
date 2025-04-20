@@ -3,7 +3,7 @@ import { useAppSelector } from '../../hooks';
 import { getCameras, getPromoCameras, getSubmittingStatus } from '../../store/camera-data/camera-data-selectors';
 import { CameraInfo } from '../../types/camera';
 import { Link } from 'react-router-dom';
-import { filterCameras, getArrayWithNewOrDeletedElement, getCameraPathById, getDocumentTitle, sortCamerasByTypeAndDirection } from '../../utils/utils';
+import { filterCameras, filterCamerasByPrice, getArrayWithNewOrDeletedElement, getCameraPathById, getDocumentTitle, sortCamerasByTypeAndDirection } from '../../utils/utils';
 import { DocumentTitle, FilterCameraCategory, FilterCameraLevel, FilterCameraType, SortDirection, SortType } from '../../const';
 import CatalogCallItemPopup from '../../components/catalog-call-item-popup/catalog-call-item-popup';
 import Footer from '../../components/footer/footer';
@@ -24,8 +24,13 @@ export default function CatalogScreen (): JSX.Element {
   const [filterCameraTypes, setFilterCameraTypes] = useState<FilterCameraType[]>([]);
   const [filterCameraLevels, setFilterCameraLevels] = useState<FilterCameraLevel[]>([]);
 
-  const cameras = sortCamerasByTypeAndDirection(useAppSelector(getCameras), sortType, sortDirection);
-  const filteredCameras = filterCameras(cameras, filterCameraCategory, filterCameraTypes, filterCameraLevels);
+  const [minPrice, setMinPrice] = useState<number | undefined>(0);
+  const [maxPrice, setMaxPrice] = useState<number | undefined>(0);
+
+  const cameras = useAppSelector(getCameras);
+  const sortedCameras = sortCamerasByTypeAndDirection(cameras, sortType, sortDirection);
+  const filteredCameras = filterCameras(sortedCameras, filterCameraCategory, filterCameraTypes, filterCameraLevels);
+  const filteredCamerasByPrice = filterCamerasByPrice(filteredCameras, minPrice, maxPrice);
 
   const promoCamera = useAppSelector(getPromoCameras)[0];
   const isSubmitting = useAppSelector(getSubmittingStatus);
@@ -33,6 +38,12 @@ export default function CatalogScreen (): JSX.Element {
   useEffect(() => {
     document.title = getDocumentTitle(DocumentTitle.Catalog);
   }, []);
+
+  useEffect(() => {
+    const camerasByPrice = [...cameras].sort((cameraA, cameraB) => cameraA.price - cameraB.price);
+    setMinPrice(camerasByPrice[0]?.price);
+    setMaxPrice(camerasByPrice.at(-1)?.price);
+  }, [cameras]);
 
   function getPromoCameraInfo (promoId: number): CameraInfo | undefined {
     return cameras.find((camera) => camera.id === promoId);
@@ -59,7 +70,7 @@ export default function CatalogScreen (): JSX.Element {
     }
   }
 
-  function handleFilterInputChange (evt: ChangeEvent<HTMLInputElement>) {
+  function handleFilterCategoryChange (evt: ChangeEvent<HTMLInputElement>) {
     const name = evt.target.name;
 
     const filterCategoryNames = Array.from(Object.values(FilterCameraCategory));
@@ -75,23 +86,29 @@ export default function CatalogScreen (): JSX.Element {
       if (selectedFilterCameraCategory === FilterCameraCategory.VideoCamera && filterCameraTypes.includes(FilterCameraType.Film) || filterCameraTypes.includes(FilterCameraType.Snapshot)) {
         setFilterCameraTypes([]);
       }
-
-      return;
     }
+  }
+
+  function handleFilterTypeChange (evt: ChangeEvent<HTMLInputElement>) {
+    const name = evt.target.name;
 
     const filterTypeNames = Object.values(FilterCameraType);
-    const filterLevelNames = Object.values(FilterCameraLevel);
 
     const selectedFilterCameraType = filterTypeNames.find((type) => type === name);
-    const selectedFilterCameraLevel = filterLevelNames.find((level) => level === name);
 
     if (selectedFilterCameraType) {
       const filterCameraTypesCopy = getArrayWithNewOrDeletedElement<FilterCameraType>(filterCameraTypes, selectedFilterCameraType);
 
       setFilterCameraTypes(filterCameraTypesCopy);
-
-      return;
     }
+  }
+
+  function handleFilterLevelChange (evt: ChangeEvent<HTMLInputElement>) {
+    const name = evt.target.name;
+
+    const filterLevelNames = Object.values(FilterCameraLevel);
+
+    const selectedFilterCameraLevel = filterLevelNames.find((level) => level === name);
 
     if (selectedFilterCameraLevel) {
       const filterCameraLevelsCopy = getArrayWithNewOrDeletedElement<FilterCameraLevel>(filterCameraLevels, selectedFilterCameraLevel);
@@ -99,7 +116,36 @@ export default function CatalogScreen (): JSX.Element {
       setFilterCameraLevels(filterCameraLevelsCopy);
 
     }
+  }
 
+  function handleFilterMinPriceChange (evt: ChangeEvent<HTMLInputElement>) {
+    const value = Number(evt.target.value);
+    const cameraPrices: number[] = [];
+    filteredCameras.forEach((camera) => cameraPrices.push(camera.price));
+
+    const minCameraPrice = Math.min(...cameraPrices);
+    if (value < minCameraPrice) {
+      setMinPrice(minCameraPrice);
+    } else if (maxPrice && value > maxPrice) {
+      setMinPrice(maxPrice);
+    } else {
+      setMinPrice(value);
+    }
+  }
+
+  function handleFilterMaxPriceChange (evt: ChangeEvent<HTMLInputElement>) {
+    const value = Number(evt.target.value);
+    const cameraPrices: number[] = [];
+    filteredCameras.forEach((camera) => cameraPrices.push(camera.price));
+
+    const maxCameraPrice = Math.max(...cameraPrices);
+    if (value > maxCameraPrice) {
+      setMaxPrice(maxCameraPrice);
+    } else if (minPrice && value < minPrice) {
+      setMaxPrice(minPrice);
+    } else {
+      setMaxPrice(value);
+    }
   }
 
   function handleFilterResetButtonClick () {
@@ -151,13 +197,13 @@ export default function CatalogScreen (): JSX.Element {
               <div className="page-content__columns">
                 <div className="catalog__aside">
 
-                  <CatalogFilter category={filterCameraCategory} types={filterCameraTypes} levels={filterCameraLevels} onInputChange={handleFilterInputChange} onResetButtonClick={handleFilterResetButtonClick}/>
+                  <CatalogFilter category={filterCameraCategory} types={filterCameraTypes} levels={filterCameraLevels} minPrice={minPrice} maxPrice={maxPrice} onCategoryChange={handleFilterCategoryChange} onTypeChange={handleFilterTypeChange} onLevelChange={handleFilterLevelChange} onMinPriceChange={handleFilterMinPriceChange} onMaxPriceChange={handleFilterMaxPriceChange} onResetButtonClick={handleFilterResetButtonClick}/>
 
                 </div>
                 <div className="catalog__content">
 
                   <CatalogSort sortType={sortType} sortDirection={sortDirection} onInputChange={handleSortInputChange}/>
-                  <ProductList cameras={filteredCameras} handleCallButtonClick={handleCallButtonClick} />
+                  <ProductList cameras={filteredCamerasByPrice} handleCallButtonClick={handleCallButtonClick} />
 
                 </div>
               </div>

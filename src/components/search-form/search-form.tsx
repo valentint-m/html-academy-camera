@@ -3,6 +3,9 @@ import { useAppSelector } from '../../hooks';
 import { getCameras } from '../../store/camera-data/camera-data-selectors';
 import SearchFormItem from '../search-form-item/search-form-item';
 
+const MIN_SEARCH_LENGTH_TO_OPEN_LIST = 3;
+const MIN_SEARCH_LENGTH_TO_SHOW_RESET_BUTTON = 1;
+
 export default function SearchForm (): JSX.Element {
   const [searchText, setSearchText] = useState<string>('');
 
@@ -13,8 +16,12 @@ export default function SearchForm (): JSX.Element {
     setSearchText(text);
   }
 
+  function handleResetButtonClick () {
+    setSearchText('');
+  }
+
   return (
-    <div className={searchText.length >= 3 ? 'form-search list-opened' : 'form-search'}>
+    <div className={searchText.length >= MIN_SEARCH_LENGTH_TO_OPEN_LIST ? 'form-search list-opened' : 'form-search'}>
       <form>
         <label>
           <svg className="form-search__icon" width="16" height="16" aria-hidden="true">
@@ -30,7 +37,7 @@ export default function SearchForm (): JSX.Element {
           })}
         </ul>
       </form>
-      <button className="form-search__reset" style={searchText.length > 0 ? {display: 'block'} : {display: 'none'}} type="reset">
+      <button className="form-search__reset" style={searchText.length >= MIN_SEARCH_LENGTH_TO_SHOW_RESET_BUTTON ? {display: 'block'} : {display: 'none'}} type="reset" onClick={handleResetButtonClick}>
         <svg width="10" height="10" aria-hidden="true">
           <use xlinkHref="#icon-close"></use>
         </svg><span className="visually-hidden">Сбросить поиск</span>

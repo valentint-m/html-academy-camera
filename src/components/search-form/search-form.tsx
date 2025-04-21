@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useAppSelector } from '../../hooks';
 import { getCameras } from '../../store/camera-data/camera-data-selectors';
 import SearchFormItem from '../search-form-item/search-form-item';
@@ -8,14 +8,19 @@ const MIN_SEARCH_LENGTH_TO_SHOW_RESET_BUTTON = 1;
 
 export default function SearchForm (): JSX.Element {
   const [searchText, setSearchText] = useState<string>('');
-  const camerasListRef = useRef<null | HTMLUListElement>(null);
 
   const cameras = useAppSelector(getCameras);
 
   function checkIfCamerasFound () {
-    if (camerasListRef.current) {
-      return camerasListRef.current.childNodes.length > 0;
+    const cameraNames = cameras.map((camera) => camera.name.toLowerCase());
+    let isFound = false;
+    for (let i = 0; i < cameraNames.length; i++) {
+      if (cameraNames[i].toLowerCase().includes(searchText.toLowerCase())) {
+        isFound = true;
+        break;
+      }
     }
+    return isFound;
   }
 
   function handleSearchInputChange (evt: ChangeEvent<HTMLInputElement>) {
@@ -36,9 +41,9 @@ export default function SearchForm (): JSX.Element {
           </svg>
           <input className="form-search__input" type="text" autoComplete="off" placeholder="Поиск по сайту" value={searchText} onChange={handleSearchInputChange} />
         </label>
-        <ul className="form-search__select-list" ref={camerasListRef} >
+        <ul className="form-search__select-list" >
           {cameras.map((camera) => {
-            if (camera.name.toLowerCase().includes(searchText.toLowerCase()) && searchText) {
+            if (camera.name.toLowerCase().includes(searchText.toLowerCase()) && searchText && searchText.length >= MIN_SEARCH_LENGTH_TO_OPEN_LIST) {
               return <SearchFormItem camera={camera} key={camera.id} />;
             }
           })}

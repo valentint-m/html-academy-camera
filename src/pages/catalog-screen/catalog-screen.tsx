@@ -4,7 +4,7 @@ import { getCameras, getPromoCameras, getSubmittingStatus } from '../../store/ca
 import { CameraInfo } from '../../types/camera';
 import { Link } from 'react-router-dom';
 import { filterCameras, filterCamerasByPrice, getArrayWithNewOrDeletedElement, getCameraPathById, getDocumentTitle, sortCamerasByTypeAndDirection } from '../../utils/utils';
-import { DocumentTitle, FilterCameraCategory, FilterCameraLevel, FilterCameraType, SortDirection, SortType } from '../../const';
+import { DocumentTitle, FilterCameraCategory, FilterCameraLevel, FilterCameraType, Path, SortDirection, SortType } from '../../const';
 import CatalogCallItemPopup from '../../components/catalog-call-item-popup/catalog-call-item-popup';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
@@ -196,11 +196,11 @@ export default function CatalogScreen (): JSX.Element {
             <div className="container">
               <ul className="breadcrumbs__list">
                 <li className="breadcrumbs__item">
-                  <a className="breadcrumbs__link" href="index.html">Главная
+                  <Link className="breadcrumbs__link" to={Path.Catalog}>Главная
                     <svg width="5" height="8" aria-hidden="true">
                       <use xlinkHref="#icon-arrow-mini"></use>
                     </svg>
-                  </a>
+                  </Link>
                 </li>
                 <li className="breadcrumbs__item"><span className="breadcrumbs__link breadcrumbs__link--active">Каталог</span>
                 </li>

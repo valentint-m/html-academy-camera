@@ -8,8 +8,8 @@ type SearchFormItemProps = {
 
 export default function SearchFormItem ({camera}: SearchFormItemProps): JSX.Element {
   return (
-    <li className="form-search__select-item" tabIndex={0}>
-      <Link to={getCameraPathById(camera.id)}>{camera.name}</Link>
+    <li className="form-search__select-item" >
+      <Link tabIndex={0} to={getCameraPathById(camera.id)}>{camera.name}</Link>
     </li>
   );
 }

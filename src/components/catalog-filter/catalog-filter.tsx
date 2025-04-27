@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { FilterCameraCategory, FilterCameraLevel, FilterCameraType } from '../../const';
 
 type CatalogFilterProps = {
@@ -10,12 +10,28 @@ type CatalogFilterProps = {
   onCategoryChange: (evt: ChangeEvent<HTMLInputElement>) => void;
   onTypeChange: (evt: ChangeEvent<HTMLInputElement>) => void;
   onLevelChange: (evt: ChangeEvent<HTMLInputElement>) => void;
-  onMinPriceChange: (evt: ChangeEvent<HTMLInputElement>) => void;
-  onMaxPriceChange: (evt: ChangeEvent<HTMLInputElement>) => void;
+  onMinPriceBlur: (evt: React.FocusEvent<HTMLInputElement>) => void;
+  onMaxPriceBlur: (evt:React.FocusEvent<HTMLInputElement>) => void;
   onResetButtonClick: () => void;
 }
 
-export default function CatalogFilter ({category, types, levels, minPrice, maxPrice, onCategoryChange, onTypeChange, onLevelChange, onMinPriceChange, onMaxPriceChange, onResetButtonClick}: CatalogFilterProps): JSX.Element {
+export default function CatalogFilter ({category, types, levels, minPrice, maxPrice, onCategoryChange, onTypeChange, onLevelChange, onMinPriceBlur, onMaxPriceBlur, onResetButtonClick}: CatalogFilterProps): JSX.Element {
+  const [inputMinPrice, setInputMinPrice] = useState<number | undefined>(minPrice);
+  const [inputMaxPrice, setInputMaxPrice] = useState<number | undefined>(maxPrice);
+
+  useEffect(() => {
+    setInputMinPrice(minPrice);
+    setInputMaxPrice(maxPrice);
+  }, [minPrice, maxPrice]);
+
+  function handleMinPriceChange (evt: ChangeEvent<HTMLInputElement>) {
+    setInputMinPrice(Number(evt.target.value));
+  }
+
+  function handleMaxPriceChange (evt: ChangeEvent<HTMLInputElement>) {
+    setInputMaxPrice(Number(evt.target.value));
+  }
+
   function checkIfCameraTypeSelected(type: FilterCameraType) {
     return types.includes(type);
   }
@@ -33,12 +49,12 @@ export default function CatalogFilter ({category, types, levels, minPrice, maxPr
           <div className="catalog-filter__price-range">
             <div className="custom-input">
               <label>
-                <input type="number" name="price" placeholder="от" value={minPrice} onChange={onMinPriceChange} />
+                <input type="number" name="price" placeholder="от" value={inputMinPrice} onBlur={onMinPriceBlur} onChange={handleMinPriceChange} />
               </label>
             </div>
             <div className="custom-input">
               <label>
-                <input type="number" name="priceUp" placeholder="до" value={maxPrice} onChange={onMaxPriceChange} />
+                <input type="number" name="priceUp" placeholder="до" value={inputMaxPrice} onBlur={onMaxPriceBlur} onChange={handleMaxPriceChange}/>
               </label>
             </div>
           </div>

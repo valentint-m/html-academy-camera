@@ -134,7 +134,7 @@ export default function CatalogScreen (): JSX.Element {
     setFilterWasSelected(true);
   }
 
-  function handleFilterMinPriceChange (evt: ChangeEvent<HTMLInputElement>) {
+  function handleFilterMinPriceBlur (evt: React.FocusEvent<HTMLInputElement>) {
     const value = Number(evt.target.value);
     const cameraPrices: number[] = [];
     filteredCameras.forEach((camera) => cameraPrices.push(camera.price));
@@ -149,7 +149,7 @@ export default function CatalogScreen (): JSX.Element {
     }
   }
 
-  function handleFilterMaxPriceChange (evt: ChangeEvent<HTMLInputElement>) {
+  function handleFilterMaxPriceBlur (evt: React.FocusEvent<HTMLInputElement>) {
     const value = Number(evt.target.value);
     const cameraPrices: number[] = [];
     filteredCameras.forEach((camera) => cameraPrices.push(camera.price));
@@ -213,7 +213,7 @@ export default function CatalogScreen (): JSX.Element {
               <div className="page-content__columns">
                 <div className="catalog__aside">
 
-                  <CatalogFilter category={filterCameraCategory} types={filterCameraTypes} levels={filterCameraLevels} minPrice={minPrice} maxPrice={maxPrice} onCategoryChange={handleFilterCategoryChange} onTypeChange={handleFilterTypeChange} onLevelChange={handleFilterLevelChange} onMinPriceChange={handleFilterMinPriceChange} onMaxPriceChange={handleFilterMaxPriceChange} onResetButtonClick={handleFilterResetButtonClick}/>
+                  <CatalogFilter category={filterCameraCategory} types={filterCameraTypes} levels={filterCameraLevels} minPrice={minPrice} maxPrice={maxPrice} onCategoryChange={handleFilterCategoryChange} onTypeChange={handleFilterTypeChange} onLevelChange={handleFilterLevelChange} onMinPriceBlur={handleFilterMinPriceBlur} onMaxPriceBlur={handleFilterMaxPriceBlur} onResetButtonClick={handleFilterResetButtonClick}/>
 
                 </div>
                 <div className="catalog__content">

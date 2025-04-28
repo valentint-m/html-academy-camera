@@ -2,14 +2,25 @@ import { ChangeEvent, useState } from 'react';
 import { useAppSelector } from '../../hooks';
 import { getCameras } from '../../store/camera-data/camera-data-selectors';
 import SearchFormItem from '../search-form-item/search-form-item';
+import useKeyNavigation from '../../hooks/use-key-navigation/use-key-navigation';
+import { getCamerasSearchCount } from '../../utils/utils';
+import { CameraInfo } from '../../types/camera';
 
 const MIN_SEARCH_LENGTH_TO_OPEN_LIST = 3;
 const MIN_SEARCH_LENGTH_TO_SHOW_RESET_BUTTON = 1;
 
 export default function SearchForm (): JSX.Element {
   const [searchText, setSearchText] = useState<string>('');
-
   const cameras = useAppSelector(getCameras);
+  const [focus, setFocus] = useKeyNavigation(getCamerasSearchCount(cameras, searchText) ?? 0);
+
+  const camerasFound: CameraInfo[] = [];
+
+  cameras.map((camera) => {
+    if (camera.name.toLowerCase().includes(searchText.toLowerCase()) && searchText && searchText.length >= MIN_SEARCH_LENGTH_TO_OPEN_LIST) {
+      camerasFound.push(camera);
+    }
+  });
 
   function checkIfCamerasFound () {
     const cameraNames = cameras.map((camera) => camera.name.toLowerCase());
@@ -42,9 +53,9 @@ export default function SearchForm (): JSX.Element {
           <input className="form-search__input" type="text" autoComplete="off" placeholder="Поиск по сайту" value={searchText} onChange={handleSearchInputChange} />
         </label>
         <ul className="form-search__select-list" >
-          {cameras.map((camera) => {
-            if (camera.name.toLowerCase().includes(searchText.toLowerCase()) && searchText && searchText.length >= MIN_SEARCH_LENGTH_TO_OPEN_LIST) {
-              return <SearchFormItem camera={camera} key={camera.id} />;
+          {camerasFound.map((camera, index) => {
+            if (camera) {
+              return <SearchFormItem camera={camera} key={camera.id} index={index} focus={focus === index} setFocus={setFocus} />;
             }
           })}
         </ul>

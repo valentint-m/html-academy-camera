@@ -154,5 +154,16 @@ function getArrayWithNewOrDeletedElement<TypeElement>(array: TypeElement[], elem
   return arrayCopy;
 }
 
+function getCamerasSearchCount (cameras: CameraInfo[], searchText: string) {
+  const cameraNames = cameras.map((camera) => camera.name.toLowerCase());
+  let cameraCount = 0;
+  for (let i = 0; i < cameraNames.length; i++) {
+    if (cameraNames[i].toLowerCase().includes(searchText.toLowerCase())) {
+      cameraCount += 1;
+    }
+  }
+  return cameraCount;
+}
 
-export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, getFormattedDate, getDocumentTitle, sortReviewsByLatest, sortCamerasByTypeAndDirection, getArrayWithNewOrDeletedElement, filterCameras, filterCamerasByPrice };
+
+export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, getFormattedDate, getDocumentTitle, sortReviewsByLatest, sortCamerasByTypeAndDirection, getArrayWithNewOrDeletedElement, filterCameras, filterCamerasByPrice, getCamerasSearchCount };

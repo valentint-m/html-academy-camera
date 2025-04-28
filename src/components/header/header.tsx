@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Path } from '../../const';
+import SearchForm from '../search-form/search-form';
 
 export default function Header (): JSX.Element {
   return (
@@ -22,6 +23,9 @@ export default function Header (): JSX.Element {
             </li>
           </ul>
         </nav>
+
+        <SearchForm />
+
       </div>
     </header>
   );

@@ -1,5 +1,5 @@
-import { ApiRoute, DEFAULT_DOCUMENT_TITLE, PRODUCT_PATH } from '../const';
-import { ReviewInfo } from '../types/camera';
+import { ApiRoute, CameraCategoryRussian, CameraLevelRussian, CameraTypeRussian, DEFAULT_DOCUMENT_TITLE, FilterCameraCategory, FilterCameraLevel, FilterCameraType, PRODUCT_PATH, SortDirection, SortType } from '../const';
+import { CameraInfo, ReviewInfo } from '../types/camera';
 
 function getCameraUrlById (id: number) {
   return `${ApiRoute.Cameras}${id}`;
@@ -30,6 +30,10 @@ function getFormattedDate (dateString: string) {
   return formattedDate;
 }
 
+function getDocumentTitle (pageName: string) {
+  return `${pageName} - ${DEFAULT_DOCUMENT_TITLE}`;
+}
+
 function sortReviewsByLatest (reviews: ReviewInfo[]) {
   const reviewsCopy = Array.from(reviews);
 
@@ -41,8 +45,125 @@ function sortReviewsByLatest (reviews: ReviewInfo[]) {
   return sortedReviews;
 }
 
-function getDocumentTitle (pageName: string) {
-  return `${pageName} - ${DEFAULT_DOCUMENT_TITLE}`;
+function sortCamerasByTypeAndDirection (cameras: CameraInfo[], type: SortType, direction: SortDirection) {
+  const camerasCopy = Array.from(cameras);
+
+  switch (direction) {
+    case SortDirection.Up:
+      camerasCopy.sort((cameraA, cameraB) => cameraA[type] - cameraB[type]);
+      break;
+    case SortDirection.Down:
+      camerasCopy.sort((cameraA, cameraB) => cameraB[type] - cameraA[type]);
+      break;
+    default:
+      break;
+  }
+
+  return camerasCopy;
 }
 
-export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, getFormattedDate, sortReviewsByLatest, getDocumentTitle };
+function getTranslatedCameraCategoryName (category: string) {
+  switch (category){
+    case CameraCategoryRussian.PhotoCamera:
+      return FilterCameraCategory.PhotoCamera;
+    case CameraCategoryRussian.VideoCamera:
+      return FilterCameraCategory.VideoCamera;
+  }
+}
+
+function getTranslatedCameraTypeName (type: string) {
+  switch (type){
+    case CameraTypeRussian.Collection:
+      return FilterCameraType.Collection;
+    case CameraTypeRussian.Film:
+      return FilterCameraType.Film;
+    case CameraTypeRussian.Digital:
+      return FilterCameraType.Digital;
+    case CameraTypeRussian.Snapshot:
+      return FilterCameraType.Snapshot;
+  }
+}
+
+function getTranslatedCameraLevelName (level: string) {
+  switch (level){
+    case CameraLevelRussian.Zero:
+      return FilterCameraLevel.Zero;
+    case CameraLevelRussian.NonProfessional:
+      return FilterCameraLevel.NonProfessional;
+    case CameraLevelRussian.Professional:
+      return FilterCameraLevel.Professional;
+  }
+}
+
+function filterCameras (cameras: CameraInfo[], filterCategory: FilterCameraCategory, filterType: FilterCameraType[], filterLevel: FilterCameraLevel[]) {
+  const camerasCopy = Array.from(cameras);
+
+  const camerasFilteredByCategory = camerasCopy.filter((camera) => {
+    if (filterCategory === FilterCameraCategory.None) {
+      return true;
+    }
+    const cameraTranslatedCategory = getTranslatedCameraCategoryName(camera.category);
+    if (cameraTranslatedCategory) {
+      return cameraTranslatedCategory === filterCategory;
+    }
+  });
+  const camerasFilteredByCategoryAndType = camerasFilteredByCategory.filter((camera) => {
+    if (filterType.length === 0) {
+      return true;
+    }
+    const cameraTranslatedType = getTranslatedCameraTypeName(camera.type);
+    if (cameraTranslatedType) {
+      return filterType.includes(cameraTranslatedType);
+    }
+  });
+  const camerasFilteredByCategoryAndTypeAndLevel = camerasFilteredByCategoryAndType.filter((camera) => {
+    if (filterLevel.length === 0) {
+      return true;
+    }
+    const cameraTranslatedLevel = getTranslatedCameraLevelName(camera.level);
+    if (cameraTranslatedLevel) {
+      return filterLevel.includes(cameraTranslatedLevel);
+    }
+  });
+
+  return camerasFilteredByCategoryAndTypeAndLevel;
+}
+
+function filterCamerasByPrice (cameras: CameraInfo[], minPrice: number | undefined, maxPrice: number | undefined) {
+  const camerasCopy = Array.from(cameras);
+
+  if (minPrice && maxPrice) {
+    const camerasFilteredByPrice = camerasCopy.filter((camera) => camera.price >= minPrice && camera.price <= maxPrice);
+    return camerasFilteredByPrice;
+  }
+
+  return camerasCopy;
+}
+
+function getArrayWithNewOrDeletedElement<TypeElement>(array: TypeElement[], element: TypeElement): TypeElement[] {
+  const arrayCopy = [...array];
+
+  if (arrayCopy.includes(element)) {
+    const elementIndex = arrayCopy.findIndex((value) => value === element);
+    arrayCopy.splice(elementIndex, 1);
+
+  } else {
+    arrayCopy.push(element);
+  }
+
+  return arrayCopy;
+}
+
+function getCamerasSearchCount (cameras: CameraInfo[], searchText: string) {
+  const cameraNames = cameras.map((camera) => camera.name.toLowerCase());
+  let cameraCount = 0;
+  for (let i = 0; i < cameraNames.length; i++) {
+    if (cameraNames[i].toLowerCase().includes(searchText.toLowerCase())) {
+      cameraCount += 1;
+    }
+  }
+  return cameraCount;
+}
+
+
+export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, getFormattedDate, getDocumentTitle, sortReviewsByLatest, sortCamerasByTypeAndDirection, getArrayWithNewOrDeletedElement, filterCameras, filterCamerasByPrice, getCamerasSearchCount };

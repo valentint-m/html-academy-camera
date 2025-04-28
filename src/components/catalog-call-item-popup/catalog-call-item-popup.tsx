@@ -5,7 +5,7 @@ import { ESCAPE_KEY, PHONE_NUMBER_WITH_PLUS_LENGTH, PhoneNumberCode } from '../.
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { orderCameraAction } from '../../store/api-actions/api-actions';
 import { getSubmittingStatus } from '../../store/camera-data/camera-data-selectors';
-import useScrollLock from '../../hooks/use-scroll-lock';
+import useScrollLock from '../../hooks/use-scroll-lock/use-scroll-lock';
 import ReactFocusLock from 'react-focus-lock';
 
 type CatalogCallItemPopupProps = {

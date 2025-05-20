@@ -5,6 +5,7 @@ export type CameraData = {
   cameras: CameraInfo[];
   cameraById: CameraInfo;
   similarCameras: CameraInfo[];
+  camerasInCart: CameraInfo[];
   reviews: ReviewInfo[];
   promoCameras: PromoInfo[];
   isCamerasDataLoading: boolean;

@@ -9,6 +9,8 @@ export const getCameraById = (state: State): CameraInfo => state[NameSpace.Data]
 
 export const getSimilarCameras = (state: State): CameraInfo[] => state[NameSpace.Data].similarCameras;
 
+export const getCamerasInCart = (state: State): CameraInfo[] => state[NameSpace.Data].camerasInCart;
+
 export const getReviews = (state: State): ReviewInfo[] => sortReviewsByLatest(state[NameSpace.Data].reviews);
 
 export const getPromoCameras = (state: State): PromoInfo[] => state[NameSpace.Data].promoCameras;

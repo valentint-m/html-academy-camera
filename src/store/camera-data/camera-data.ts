@@ -23,6 +23,7 @@ const initialState: CameraData = {
     previewImgWebp2x: '',
   },
   similarCameras: [],
+  camerasInCart: [],
   reviews: [],
   promoCameras: [],
   isCamerasDataLoading: false,
@@ -33,7 +34,14 @@ const initialState: CameraData = {
 export const cameraData = createSlice({
   name: NameSpace.Data,
   initialState,
-  reducers: {},
+  reducers: {
+    addCameraToCart: (state, action: PayloadAction<CameraInfo>) => {
+      state.camerasInCart.push(action.payload);
+    },
+    clearCamerasInCart: (state) => {
+      state.camerasInCart = [];
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchCamerasAction.pending, (state) => {
@@ -105,4 +113,6 @@ export const cameraData = createSlice({
       });
   }
 });
+
+export const { addCameraToCart, clearCamerasInCart } = cameraData.actions;
 

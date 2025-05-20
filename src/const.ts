@@ -15,7 +15,7 @@ export enum ApiRoute {
 export enum Path {
   Main = '/',
   Catalog = '/catalog',
-  Basket = '/basket',
+  Cart = '/cart',
   Product = '/product/:id',
 }
 

@@ -7,6 +7,7 @@ import LoadingScreen from '../../pages/loading-screen/loading-screen';
 import ErrorServerScreen from '../../pages/error-server-screen/error-server-screen';
 import CatalogScreen from '../../pages/catalog-screen/catalog-screen';
 import ProductScreen from '../../pages/product-screen/product-screen';
+import CartScreen from '../../pages/cart-screen/cart-screen';
 
 function App (): JSX.Element {
   const isCamerasDataLoading = useAppSelector(getCamerasDataLoadingStatus);
@@ -29,7 +30,7 @@ function App (): JSX.Element {
         <Route path={Path.Main} element={<CatalogScreen />} />
         <Route path={Path.Catalog} element={<CatalogScreen />} />
         <Route path={Path.Product} element={<ProductScreen />} />
-        <Route path={Path.Basket} element={<CatalogScreen />} />
+        <Route path={Path.Cart} element={<CartScreen />} />
         <Route path='*' element={<ErrorRouteScreen />} />
       </Routes>
     </BrowserRouter>

@@ -5,12 +5,12 @@ import { CameraInfo } from '../../types/camera';
 import { Link } from 'react-router-dom';
 import { filterCameras, filterCamerasByPrice, getArrayWithNewOrDeletedElement, getCameraPathById, getDocumentTitle, sortCamerasByTypeAndDirection } from '../../utils/utils';
 import { DocumentTitle, FilterCameraCategory, FilterCameraLevel, FilterCameraType, Path, SortDirection, SortType } from '../../const';
-import CatalogCallItemPopup from '../../components/catalog-call-item-popup/catalog-call-item-popup';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
 import ProductList from '../../components/product-list/product-list';
 import CatalogSort from '../../components/catalog-sort/catalog-sort';
 import CatalogFilter from '../../components/catalog-filter/catalog-filter';
+import CatalogAddItemPopup from '../../components/catalog-add-item-popup/catalog-add-item-popup';
 
 
 export default function CatalogScreen (): JSX.Element {
@@ -226,7 +226,7 @@ export default function CatalogScreen (): JSX.Element {
             </div>
           </section>
         </div>
-        {isPopupActive && selectedCamera && <CatalogCallItemPopup camera={selectedCamera} onCloseModal={handleModalClose} />}
+        {isPopupActive && selectedCamera && <CatalogAddItemPopup camera={selectedCamera} onCloseModal={handleModalClose} />}
       </main>
       <Footer />
     </div>

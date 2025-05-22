@@ -1,9 +1,14 @@
+import { CameraInCart } from '../../types/camera';
 import CartCard from '../cart-card/cart-card';
 
-export default function CartList (): JSX.Element {
+type CartListProps ={
+  camerasInCart: CameraInCart[];
+}
+
+export default function CartList ({camerasInCart}: CartListProps): JSX.Element {
   return (
     <ul className="basket__list">
-      <CartCard />
+      {camerasInCart.map((cameraInCart) => <CartCard cameraInCart={cameraInCart} key={cameraInCart.camera.id} />)}
     </ul>
   );
 }

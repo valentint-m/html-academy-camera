@@ -1,6 +1,11 @@
+import { CameraInCart } from '../../types/camera';
 import CartPromo from '../cart-promo/cart-promo';
 
-export default function CartSummary (): JSX.Element {
+type CartSummaryProps = {
+  camerasInCart: CameraInCart[];
+}
+
+export default function CartSummary ({camerasInCart}: CartSummaryProps): JSX.Element {
   return (
     <div className="basket__summary">
       <CartPromo />

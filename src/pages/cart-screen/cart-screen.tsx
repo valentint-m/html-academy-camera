@@ -1,11 +1,16 @@
 import { Link } from 'react-router-dom';
 import { Path } from '../../const';
+import { useAppSelector } from '../../hooks';
+import { getCamerasInCart } from '../../store/camera-data/camera-data-selectors';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
 import CartSummary from '../../components/cart-summary/cart-summary';
 import CartList from '../../components/cart-list/cart-list';
 
+
 export default function CartScreen (): JSX.Element {
+  const camerasInCart = useAppSelector(getCamerasInCart);
+
   return (
     <div className="wrapper">
       <Header />
@@ -37,8 +42,8 @@ export default function CartScreen (): JSX.Element {
             <div className="container">
               <h1 className="title title--h2">Корзина</h1>
 
-              <CartList />
-              <CartSummary />
+              <CartList camerasInCart={camerasInCart} />
+              <CartSummary camerasInCart={camerasInCart} />
 
             </div>
           </section>

@@ -1,11 +1,11 @@
 import { store } from '../store/index';
-import { CameraInfo, PromoInfo, ReviewInfo } from './camera';
+import { CameraInCart, CameraInfo, PromoInfo, ReviewInfo } from './camera';
 
 export type CameraData = {
   cameras: CameraInfo[];
   cameraById: CameraInfo;
   similarCameras: CameraInfo[];
-  camerasInCart: CameraInfo[];
+  camerasInCart: CameraInCart[];
   reviews: ReviewInfo[];
   promoCameras: PromoInfo[];
   isCamerasDataLoading: boolean;

@@ -1,8 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Path } from '../../const';
 import SearchForm from '../search-form/search-form';
+import { useAppSelector } from '../../hooks';
+import { getCamerasInCart } from '../../store/camera-data/camera-data-selectors';
 
 export default function Header (): JSX.Element {
+  const camerasInCart = useAppSelector(getCamerasInCart);
+  const camerasCount = camerasInCart.length;
+
   return (
     <header className="header" id="header">
       <div className="container">
@@ -29,7 +34,7 @@ export default function Header (): JSX.Element {
         <Link className="header__basket-link" to={Path.Cart}>
           <svg width="16" height="16" aria-hidden="true">
             <use xlinkHref="#icon-basket"></use>
-          </svg><span className="header__basket-count">3</span>
+          </svg><span className="header__basket-count">{camerasCount}</span>
         </Link>
 
       </div>

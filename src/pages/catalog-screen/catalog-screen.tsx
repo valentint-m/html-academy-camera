@@ -1,21 +1,26 @@
 import { ChangeEvent, useEffect, useState } from 'react';
-import { useAppSelector } from '../../hooks';
-import { getCameras, getPromoCameras, getSubmittingStatus } from '../../store/camera-data/camera-data-selectors';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { getCameras, getPromoCameras } from '../../store/camera-data/camera-data-selectors';
 import { CameraInfo } from '../../types/camera';
 import { Link } from 'react-router-dom';
 import { filterCameras, filterCamerasByPrice, getArrayWithNewOrDeletedElement, getCameraPathById, getDocumentTitle, sortCamerasByTypeAndDirection } from '../../utils/utils';
 import { DocumentTitle, FilterCameraCategory, FilterCameraLevel, FilterCameraType, Path, SortDirection, SortType } from '../../const';
+import { cameraData } from '../../store/camera-data/camera-data';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
 import ProductList from '../../components/product-list/product-list';
 import CatalogSort from '../../components/catalog-sort/catalog-sort';
 import CatalogFilter from '../../components/catalog-filter/catalog-filter';
 import CatalogAddItemPopup from '../../components/catalog-add-item-popup/catalog-add-item-popup';
+import CatalogAddItemSuccessPopup from '../../components/catalog-add-item-success-popup/catalog-add-item-success-popup';
 
 
 export default function CatalogScreen (): JSX.Element {
+  const dispatch = useAppDispatch();
+
   const [selectedCamera, setCamera] = useState<CameraInfo | undefined>(undefined);
-  const [isPopupActive, setPopupActive] = useState(false);
+  const [isPopupAddCameraActive, setPopupAddCameraActive] = useState(false);
+  const [isPopupAddCameraSuccessActive, setPopupAddCameraSuccessActive] = useState(false);
 
   const [sortType, setSortType] = useState<SortType>(SortType.Price);
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.Up);
@@ -35,7 +40,6 @@ export default function CatalogScreen (): JSX.Element {
   const filteredCamerasByPrice = filterCamerasByPrice(filteredCameras, minPrice, maxPrice);
 
   const promoCamera = useAppSelector(getPromoCameras)[0];
-  const isSubmitting = useAppSelector(getSubmittingStatus);
 
   useEffect(() => {
     document.title = getDocumentTitle(DocumentTitle.Catalog);
@@ -170,15 +174,23 @@ export default function CatalogScreen (): JSX.Element {
     setFilterCameraLevels([]);
   }
 
-  function handleCallButtonClick (camera: CameraInfo) {
-    setPopupActive(true);
+  function handleBuyButtonClick (camera: CameraInfo) {
+    setPopupAddCameraActive(true);
     setCamera(camera);
   }
 
-  function handleModalClose () {
-    if (!isSubmitting) {
-      setPopupActive(false);
-    }
+  function handleModalAddCameraClose () {
+    setPopupAddCameraActive(false);
+  }
+
+  function handleAddCameraButtonClick () {
+    handleModalAddCameraClose();
+    setPopupAddCameraSuccessActive(true);
+    dispatch(cameraData.actions.addCameraToCart(selectedCamera));
+  }
+
+  function handleModalAddCameraSuccessClose () {
+    setPopupAddCameraSuccessActive(false);
   }
 
   return (
@@ -219,14 +231,15 @@ export default function CatalogScreen (): JSX.Element {
                 <div className="catalog__content">
 
                   <CatalogSort sortType={sortType} sortDirection={sortDirection} onInputChange={handleSortInputChange}/>
-                  <ProductList cameras={filteredCamerasByPrice} handleCallButtonClick={handleCallButtonClick} />
+                  <ProductList cameras={filteredCamerasByPrice} onBuyButtonClick={handleBuyButtonClick} />
 
                 </div>
               </div>
             </div>
           </section>
         </div>
-        {isPopupActive && selectedCamera && <CatalogAddItemPopup camera={selectedCamera} onCloseModal={handleModalClose} />}
+        {isPopupAddCameraActive && selectedCamera && <CatalogAddItemPopup camera={selectedCamera} onAddItemButtonClick={handleAddCameraButtonClick} onCloseModal={handleModalAddCameraClose} />}
+        {isPopupAddCameraSuccessActive && <CatalogAddItemSuccessPopup onCloseModal={handleModalAddCameraSuccessClose} />}
       </main>
       <Footer />
     </div>

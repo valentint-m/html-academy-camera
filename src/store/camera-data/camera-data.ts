@@ -2,7 +2,7 @@ import { createSlice, PayloadAction} from '@reduxjs/toolkit';
 import { NameSpace } from '../../const';
 import { CameraData } from '../../types/state';
 import { fetchCameraByIdAction, fetchCamerasAction, fetchPromoCamerasAction, fetchReviewsByIdAction, fetchSimilarCamerasByIdAction, orderCameraAction } from '../api-actions/api-actions';
-import { CameraInCart, CameraInfo, PromoInfo, ReviewInfo } from '../../types/camera';
+import { CameraInfo, PromoInfo, ReviewInfo } from '../../types/camera';
 
 const initialState: CameraData = {
   cameras: [],
@@ -35,7 +35,11 @@ export const cameraData = createSlice({
   name: NameSpace.Data,
   initialState,
   reducers: {
-    addCameraToCart: (state, action: PayloadAction<CameraInfo>) => {
+    addCameraToCart: (state, action: PayloadAction<CameraInfo | undefined>) => {
+      if (!action.payload) {
+        return;
+      }
+
       for (let i = 0; i < state.camerasInCart.length; i++) {
         if (state.camerasInCart[i].camera.id === action.payload.id) {
           state.camerasInCart[i].number++;
@@ -45,28 +49,30 @@ export const cameraData = createSlice({
       state.camerasInCart.push({camera: action.payload, number: 1});
     },
 
+    decreaseCameraInCartCount: (state, action: PayloadAction<number | undefined>) => {
+      for (let i = 0; i < state.camerasInCart.length; i++) {
+        if (state.camerasInCart[i].camera.id === action.payload) {
+          state.camerasInCart[i].number--;
+          break;
+        }
+      }
+    },
+
     removeCameraFromCart: (state, action: PayloadAction<number>) => {
       const camerasInCartCopy = [...state.camerasInCart];
-      let deletedCameraInCart: CameraInCart | undefined = undefined;
       let deletedCameraInCartIndex: number | undefined = undefined;
 
       for (let i = 0; i < state.camerasInCart.length; i++) {
         if (state.camerasInCart[i].camera.id === action.payload) {
-          deletedCameraInCart = state.camerasInCart[i];
           deletedCameraInCartIndex = i;
           break;
         }
       }
 
-      if (deletedCameraInCart && deletedCameraInCartIndex) {
-        if (deletedCameraInCart.number === 1) {
-          camerasInCartCopy.splice(deletedCameraInCartIndex, 1);
-          state.camerasInCart = camerasInCartCopy;
-        } else {
-          state.camerasInCart[deletedCameraInCartIndex].number--;
-        }
+      if (deletedCameraInCartIndex !== undefined) {
+        camerasInCartCopy.splice(deletedCameraInCartIndex, 1);
+        state.camerasInCart = camerasInCartCopy;
       }
-
     },
 
     clearCamerasInCart: (state) => {

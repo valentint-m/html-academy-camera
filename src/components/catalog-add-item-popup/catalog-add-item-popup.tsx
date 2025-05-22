@@ -7,9 +7,10 @@ import useScrollLock from '../../hooks/use-scroll-lock/use-scroll-lock';
 type CatalogAddItemPopupProps = {
   camera: CameraInfo;
   onCloseModal: () => void;
+  onAddItemButtonClick: () => void;
 }
 
-export default function CatalogAddItemPopup({camera, onCloseModal}: CatalogAddItemPopupProps): JSX.Element {
+export default function CatalogAddItemPopup({camera, onCloseModal, onAddItemButtonClick}: CatalogAddItemPopupProps): JSX.Element {
   useScrollLock();
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export default function CatalogAddItemPopup({camera, onCloseModal}: CatalogAddIt
               </div>
             </div>
             <div className="modal__buttons">
-              <button className="btn btn--purple modal__btn modal__btn--fit-width" type="button">
+              <button className="btn btn--purple modal__btn modal__btn--fit-width" type="button" onClick={onAddItemButtonClick}>
                 <svg width="24" height="16" aria-hidden="true">
                   <use xlinkHref="#icon-add-basket"></use>
                 </svg>Добавить в корзину

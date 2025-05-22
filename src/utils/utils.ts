@@ -1,5 +1,5 @@
 import { ApiRoute, CameraCategoryRussian, CameraLevelRussian, CameraTypeRussian, DEFAULT_DOCUMENT_TITLE, FilterCameraCategory, FilterCameraLevel, FilterCameraType, PRODUCT_PATH, SortDirection, SortType } from '../const';
-import { CameraInfo, ReviewInfo } from '../types/camera';
+import { CameraInCart, CameraInfo, ReviewInfo } from '../types/camera';
 
 function getCameraUrlById (id: number) {
   return `${ApiRoute.Cameras}${id}`;
@@ -165,5 +165,23 @@ function getCamerasSearchCount (cameras: CameraInfo[], searchText: string) {
   return cameraCount;
 }
 
+function getSummaryValue (camerasInCart: CameraInCart[]) {
+  let summaryValue = 0;
 
-export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, getFormattedDate, getDocumentTitle, sortReviewsByLatest, sortCamerasByTypeAndDirection, getArrayWithNewOrDeletedElement, filterCameras, filterCamerasByPrice, getCamerasSearchCount };
+  camerasInCart.forEach((cameraInCart) => {
+    summaryValue += cameraInCart.number * cameraInCart.camera.price;
+  });
+
+  return summaryValue;
+}
+
+function getBonusValue (summaryValue: number, discountValue: number) {
+  return summaryValue - discountValue;
+}
+
+function getSummaryWithDiscountValue (summaryValue: number, bonusValue: number) {
+  return summaryValue - bonusValue;
+}
+
+
+export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, getFormattedDate, getDocumentTitle, sortReviewsByLatest, sortCamerasByTypeAndDirection, getArrayWithNewOrDeletedElement, filterCameras, filterCamerasByPrice, getCamerasSearchCount, getSummaryValue, getBonusValue, getSummaryWithDiscountValue };

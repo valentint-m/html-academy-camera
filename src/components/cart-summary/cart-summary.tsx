@@ -1,5 +1,5 @@
 import { CameraInCart } from '../../types/camera';
-import { getBonusValue, getSummaryValue, getSummaryWithDiscountValue } from '../../utils/utils';
+import { getBonusValue, getCamerasInCartCount, getSummaryValue, getSummaryWithDiscountValue } from '../../utils/utils';
 import CartPromo from '../cart-promo/cart-promo';
 
 type CartSummaryProps = {
@@ -7,9 +7,9 @@ type CartSummaryProps = {
 }
 
 export default function CartSummary ({camerasInCart}: CartSummaryProps): JSX.Element {
-  const discountValue = 0;
+  const camerasInCartCount = getCamerasInCartCount(camerasInCart);
   const summaryValue = getSummaryValue(camerasInCart);
-  const bonusValue = getBonusValue(summaryValue, discountValue);
+  const bonusValue = getBonusValue(summaryValue, camerasInCartCount);
   const summaryWithDiscountValue = getSummaryWithDiscountValue(summaryValue, bonusValue);
 
   return (

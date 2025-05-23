@@ -1,4 +1,4 @@
-import { ApiRoute, CameraCategoryRussian, CameraLevelRussian, CameraTypeRussian, DEFAULT_DOCUMENT_TITLE, FilterCameraCategory, FilterCameraLevel, FilterCameraType, PRODUCT_PATH, SCROLL_UP_COORD, SortDirection, SortType } from '../const';
+import { ApiRoute, CameraCategoryRussian, CameraCountDiscountValue, CameraLevelRussian, CameraSummaryPriceDiscountValue, CameraTypeRussian, CameraUpperCountForDiscount, CameraUpperSummaryPriceForDiscount, DEFAULT_DOCUMENT_TITLE, FilterCameraCategory, FilterCameraLevel, FilterCameraType, PRODUCT_PATH, SCROLL_UP_COORD, SortDirection, SortType } from '../const';
 import { CameraInCart, CameraInfo, ReviewInfo } from '../types/camera';
 
 function getCameraUrlById (id: number) {
@@ -184,8 +184,32 @@ function getSummaryValue (camerasInCart: CameraInCart[]) {
   return summaryValue;
 }
 
-function getBonusValue (summaryValue: number, discountValue: number) {
-  return summaryValue - discountValue;
+function getBonusValue (summaryValue: number, camerasInCartCount: number) {
+  let bonusPercent = 0;
+
+  if (camerasInCartCount < CameraUpperCountForDiscount.Low) {
+    return bonusPercent;
+  } else if (camerasInCartCount === CameraUpperCountForDiscount.Low) {
+    bonusPercent = CameraCountDiscountValue.Low;
+  } else if (camerasInCartCount <= CameraUpperCountForDiscount.Medium) {
+    bonusPercent = CameraCountDiscountValue.Medium;
+  } else if (camerasInCartCount <= CameraUpperCountForDiscount.High) {
+    bonusPercent = CameraCountDiscountValue.High;
+  } else if (camerasInCartCount > CameraUpperCountForDiscount.High) {
+    bonusPercent = CameraCountDiscountValue.Highest;
+  }
+
+  if (summaryValue < CameraUpperSummaryPriceForDiscount.Low) {
+    return Math.round(summaryValue * 0.01 * bonusPercent);
+  } else if (summaryValue <= CameraUpperSummaryPriceForDiscount.Medium) {
+    bonusPercent -= CameraSummaryPriceDiscountValue.Low;
+  } else if (summaryValue <= CameraUpperSummaryPriceForDiscount.High) {
+    bonusPercent -= CameraSummaryPriceDiscountValue.Medium;
+  } else if (summaryValue > CameraUpperSummaryPriceForDiscount.High) {
+    bonusPercent -= CameraSummaryPriceDiscountValue.High;
+  }
+
+  return Math.round(summaryValue * 0.01 * bonusPercent);
 }
 
 function getSummaryWithDiscountValue (summaryValue: number, bonusValue: number) {

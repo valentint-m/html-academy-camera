@@ -78,6 +78,31 @@ export enum FilterCameraLevel {
   Professional = 'professional',
 }
 
+export enum CameraUpperCountForDiscount {
+  Low = 2,
+  Medium = 5,
+  High = 10,
+}
+
+export enum CameraCountDiscountValue {
+  Low = 3,
+  Medium = 5,
+  High = 10,
+  Highest = 15,
+}
+
+export enum CameraUpperSummaryPriceForDiscount {
+  Low = 10000,
+  Medium = 20000,
+  High = 30000,
+}
+
+export enum CameraSummaryPriceDiscountValue {
+  Low = 1,
+  Medium = 2,
+  High = 3,
+}
+
 export const DEFAULT_DOCUMENT_TITLE = 'Фотошоп';
 
 export const PHONE_NUMBER_WITH_PLUS_LENGTH = 12;

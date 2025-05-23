@@ -1,4 +1,4 @@
-import { ApiRoute, CameraCategoryRussian, CameraLevelRussian, CameraTypeRussian, DEFAULT_DOCUMENT_TITLE, FilterCameraCategory, FilterCameraLevel, FilterCameraType, PRODUCT_PATH, SortDirection, SortType } from '../const';
+import { ApiRoute, CameraCategoryRussian, CameraLevelRussian, CameraTypeRussian, DEFAULT_DOCUMENT_TITLE, FilterCameraCategory, FilterCameraLevel, FilterCameraType, PRODUCT_PATH, SCROLL_UP_COORD, SortDirection, SortType } from '../const';
 import { CameraInCart, CameraInfo, ReviewInfo } from '../types/camera';
 
 function getCameraUrlById (id: number) {
@@ -165,6 +165,15 @@ function getCamerasSearchCount (cameras: CameraInfo[], searchText: string) {
   return cameraCount;
 }
 
+function getCamerasInCartCount (camerasInCart: CameraInCart[]) {
+  let camerasInCartCount = 0;
+  camerasInCart.forEach((cameraInCart) => {
+    camerasInCartCount += cameraInCart.number;
+  });
+
+  return camerasInCartCount;
+}
+
 function getSummaryValue (camerasInCart: CameraInCart[]) {
   let summaryValue = 0;
 
@@ -183,5 +192,29 @@ function getSummaryWithDiscountValue (summaryValue: number, bonusValue: number) 
   return summaryValue - bonusValue;
 }
 
+function checkIfCameraIsInCart (camera: CameraInfo, camerasInCart: CameraInCart[]) {
+  for (let i = 0; i < camerasInCart.length; i++) {
+    if (camerasInCart[i].camera.id === camera.id) {
+      return true;
+    }
+  }
+  return false;
+}
 
-export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, getFormattedDate, getDocumentTitle, sortReviewsByLatest, sortCamerasByTypeAndDirection, getArrayWithNewOrDeletedElement, filterCameras, filterCamerasByPrice, getCamerasSearchCount, getSummaryValue, getBonusValue, getSummaryWithDiscountValue };
+function scrollToTopEvent (evt: React.MouseEvent<HTMLAnchorElement>) {
+  evt.preventDefault();
+  window.scrollTo({
+    top: SCROLL_UP_COORD,
+    behavior: 'smooth'
+  });
+}
+
+function scrollToTop () {
+  window.scrollTo({
+    top: SCROLL_UP_COORD,
+    behavior: 'instant'
+  });
+}
+
+
+export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, getFormattedDate, getDocumentTitle, sortReviewsByLatest, sortCamerasByTypeAndDirection, getArrayWithNewOrDeletedElement, filterCameras, filterCamerasByPrice, getCamerasSearchCount, getSummaryValue, getBonusValue, getSummaryWithDiscountValue, getCamerasInCartCount, checkIfCameraIsInCart, scrollToTop, scrollToTopEvent };

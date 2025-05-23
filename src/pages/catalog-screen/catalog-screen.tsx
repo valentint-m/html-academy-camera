@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { getCameras, getPromoCameras } from '../../store/camera-data/camera-data-selectors';
+import { getCameras, getCamerasInCart, getPromoCameras } from '../../store/camera-data/camera-data-selectors';
 import { CameraInfo } from '../../types/camera';
 import { Link } from 'react-router-dom';
 import { filterCameras, filterCamerasByPrice, getArrayWithNewOrDeletedElement, getCameraPathById, getDocumentTitle, sortCamerasByTypeAndDirection } from '../../utils/utils';
@@ -38,6 +38,8 @@ export default function CatalogScreen (): JSX.Element {
   const sortedCameras = sortCamerasByTypeAndDirection(cameras, sortType, sortDirection);
   const filteredCameras = filterCameras(sortedCameras, filterCameraCategory, filterCameraTypes, filterCameraLevels);
   const filteredCamerasByPrice = filterCamerasByPrice(filteredCameras, minPrice, maxPrice);
+
+  const camerasInCart = useAppSelector(getCamerasInCart);
 
   const promoCamera = useAppSelector(getPromoCameras)[0];
 
@@ -231,7 +233,7 @@ export default function CatalogScreen (): JSX.Element {
                 <div className="catalog__content">
 
                   <CatalogSort sortType={sortType} sortDirection={sortDirection} onInputChange={handleSortInputChange}/>
-                  <ProductList cameras={filteredCamerasByPrice} onBuyButtonClick={handleBuyButtonClick} />
+                  <ProductList cameras={filteredCamerasByPrice} camerasInCart={camerasInCart} onBuyButtonClick={handleBuyButtonClick} />
 
                 </div>
               </div>

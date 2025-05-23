@@ -4,10 +4,11 @@ import { getCameraPathById } from '../../utils/utils';
 
 type ProductCardProps = {
   camera: CameraInfo;
+  isCameraInCart: boolean;
   onBuyButtonClick(camera: CameraInfo): void;
 }
 
-export default function ProductCard ({camera, onBuyButtonClick}: ProductCardProps): JSX.Element {
+export default function ProductCard ({camera, isCameraInCart, onBuyButtonClick}: ProductCardProps): JSX.Element {
   return (
     <div className="product-card">
       <div className="product-card__img">
@@ -40,7 +41,7 @@ export default function ProductCard ({camera, onBuyButtonClick}: ProductCardProp
         </p>
       </div>
       <div className="product-card__buttons">
-        <button className="btn btn--purple product-card__btn" type="button" onClick={() => onBuyButtonClick(camera)}>Купить
+        <button className={isCameraInCart ? 'btn btn--purple-border product-card__btn' : 'btn btn--purple product-card__btn'} type="button" onClick={() => onBuyButtonClick(camera)}>{isCameraInCart ? 'В корзине' : 'Купить'}
         </button>
         <Link className="btn btn--transparent" to={getCameraPathById(camera.id)}>Подробнее
         </Link>

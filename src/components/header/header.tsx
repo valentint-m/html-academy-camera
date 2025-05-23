@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Path } from '../../const';
-import SearchForm from '../search-form/search-form';
 import { useAppSelector } from '../../hooks';
 import { getCamerasInCart } from '../../store/camera-data/camera-data-selectors';
+import { getCamerasInCartCount } from '../../utils/utils';
+import SearchForm from '../search-form/search-form';
 
 export default function Header (): JSX.Element {
   const camerasInCart = useAppSelector(getCamerasInCart);
-  const camerasCount = camerasInCart.length;
+  const camerasCount = getCamerasInCartCount(camerasInCart);
 
   return (
     <header className="header" id="header">

@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { useAppDispatch } from '../../hooks';
 import { cameraData } from '../../store/camera-data/camera-data';
 import { CameraInCart, CameraInfo } from '../../types/camera';
+import { CameraCartCount } from '../../types/state';
+import { CameraInCartCountBoundaryValue } from '../../const';
 
 type CartCardProps = {
   cameraInCart: CameraInCart;
@@ -9,13 +12,39 @@ type CartCardProps = {
 
 export default function CartCard ({cameraInCart, onRemoveItemButtonClick}: CartCardProps): JSX.Element {
   const dispatch = useAppDispatch();
+  const [cameraCount, setCameraCount] = useState<number>(cameraInCart.number);
 
   function handleIncreaseItemCountButtonClick () {
+    setCameraCount(cameraCount + 1);
     dispatch(cameraData.actions.addCameraToCart(cameraInCart.camera));
   }
 
   function handleDecreaseItemCountButtonClick () {
+    setCameraCount(cameraCount - 1);
     dispatch(cameraData.actions.decreaseCameraInCartCount(cameraInCart.camera.id));
+  }
+
+  function handleInputCountChange (evt: React.ChangeEvent<HTMLInputElement>) {
+    const value = Number(evt.target.value);
+    const minValue = Number(evt.target.min);
+    const maxValue = Number(evt.target.max);
+
+    if (value < minValue) {
+      setCameraCount(minValue);
+    } else if (value > maxValue) {
+      setCameraCount(maxValue);
+    } else {
+      setCameraCount(value);
+    }
+  }
+
+  function handleInputCountBlur () {
+    const cameraCountInfo: CameraCartCount = {
+      id: cameraInCart.camera.id,
+      number: cameraCount,
+    };
+
+    dispatch(cameraData.actions.setCameraInCartCount(cameraCountInfo));
   }
 
   return (
@@ -36,14 +65,14 @@ export default function CartCard ({cameraInCart, onRemoveItemButtonClick}: CartC
       </div>
       <p className="basket-item__price"><span className="visually-hidden">Цена:</span>{cameraInCart.camera.price} ₽</p>
       <div className="quantity">
-        <button className="btn-icon btn-icon--prev" aria-label="уменьшить количество товара" disabled={cameraInCart.number === 1} onClick={handleDecreaseItemCountButtonClick} >
+        <button className="btn-icon btn-icon--prev" aria-label="уменьшить количество товара" disabled={cameraInCart.number === CameraInCartCountBoundaryValue.Min} onClick={handleDecreaseItemCountButtonClick} >
           <svg width="7" height="12" aria-hidden="true">
             <use xlinkHref="#icon-arrow"></use>
           </svg>
         </button>
         <label className="visually-hidden" htmlFor="counter1"></label>
-        <input type="number" id="counter1" value={cameraInCart.number} min="1" max="99" aria-label="количество товара" />
-        <button className="btn-icon btn-icon--next" aria-label="увеличить количество товара" onClick={handleIncreaseItemCountButtonClick} >
+        <input type="number" id="counter1" value={cameraCount} min={CameraInCartCountBoundaryValue.Min} max={CameraInCartCountBoundaryValue.Max} aria-label="количество товара" onChange={handleInputCountChange} onBlur={handleInputCountBlur}/>
+        <button className="btn-icon btn-icon--next" aria-label="увеличить количество товара" disabled={cameraInCart.number === CameraInCartCountBoundaryValue.Max} onClick={handleIncreaseItemCountButtonClick} >
           <svg width="7" height="12" aria-hidden="true">
             <use xlinkHref="#icon-arrow"></use>
           </svg>

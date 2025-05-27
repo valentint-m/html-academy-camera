@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction} from '@reduxjs/toolkit';
 import { NameSpace } from '../../const';
-import { CameraData } from '../../types/state';
+import { CameraCartCount, CameraData } from '../../types/state';
 import { fetchCameraByIdAction, fetchCamerasAction, fetchPromoCamerasAction, fetchReviewsByIdAction, fetchSimilarCamerasByIdAction, orderCameraAction } from '../api-actions/api-actions';
 import { CameraInfo, PromoInfo, ReviewInfo } from '../../types/camera';
 
@@ -47,6 +47,15 @@ export const cameraData = createSlice({
         }
       }
       state.camerasInCart.push({camera: action.payload, number: 1});
+    },
+
+    setCameraInCartCount: (state, action: PayloadAction<CameraCartCount>) => {
+      for (let i = 0; i < state.camerasInCart.length; i++) {
+        if (state.camerasInCart[i].camera.id === action.payload.id) {
+          state.camerasInCart[i].number = action.payload.number;
+          break;
+        }
+      }
     },
 
     decreaseCameraInCartCount: (state, action: PayloadAction<number | undefined>) => {

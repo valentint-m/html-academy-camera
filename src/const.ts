@@ -103,6 +103,11 @@ export enum CameraSummaryPriceDiscountValue {
   High = 3,
 }
 
+export enum CameraInCartCountBoundaryValue {
+  Min = 1,
+  Max = 99,
+}
+
 export const DEFAULT_DOCUMENT_TITLE = 'Фотошоп';
 
 export const PHONE_NUMBER_WITH_PLUS_LENGTH = 12;

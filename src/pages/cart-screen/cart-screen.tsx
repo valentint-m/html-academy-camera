@@ -3,18 +3,23 @@ import { Path } from '../../const';
 import { useAppSelector } from '../../hooks';
 import { getCamerasInCart } from '../../store/camera-data/camera-data-selectors';
 import { CameraInfo } from '../../types/camera';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
 import CartSummary from '../../components/cart-summary/cart-summary';
 import CartList from '../../components/cart-list/cart-list';
 import CartRemoveItemPopup from '../../components/cart-remove-item-popup/cart-remove-item-popup';
+import { scrollToTop } from '../../utils/utils';
 
 export default function CartScreen (): JSX.Element {
   const camerasInCart = useAppSelector(getCamerasInCart);
 
   const [selectedCamera, setCamera] = useState<CameraInfo | undefined>(undefined);
   const [isPopupRemoveCameraActive, setPopupRemoveCameraActive] = useState(false);
+
+  useEffect(() => {
+    scrollToTop();
+  }, []);
 
   function handleRemoveButtonClick (camera: CameraInfo) {
     setPopupRemoveCameraActive(true);

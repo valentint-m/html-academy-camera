@@ -35,7 +35,7 @@ export default function Header (): JSX.Element {
         <Link className="header__basket-link" to={Path.Cart}>
           <svg width="16" height="16" aria-hidden="true">
             <use xlinkHref="#icon-basket"></use>
-          </svg><span className="header__basket-count">{camerasCount}</span>
+          </svg><span className={camerasCount ? 'header__basket-count' : 'visually-hidden'}>{camerasCount}</span>
         </Link>
 
       </div>

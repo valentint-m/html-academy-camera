@@ -11,6 +11,8 @@ export type CameraData = {
   isCamerasDataLoading: boolean;
   hasError: boolean;
   isSubmitting: boolean;
+  hasFulfilledSubmitting: boolean;
+  hasRejectedSubmitting: boolean;
 };
 
 export type CameraCartCount = {

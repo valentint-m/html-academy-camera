@@ -18,6 +18,8 @@ describe('CameraData Slice', () => {
         isCamerasDataLoading: false,
         hasError: false,
         isSubmitting: false,
+        hasFulfilledSubmitting: false,
+        hasRejectedSubmitting: false,
       };
 
       const result = cameraData.reducer(expectedState, emptyAction);

@@ -29,6 +29,8 @@ const initialState: CameraData = {
   isCamerasDataLoading: false,
   hasError: false,
   isSubmitting: false,
+  hasFulfilledSubmitting: false,
+  hasRejectedSubmitting: false,
 };
 
 export const cameraData = createSlice({
@@ -86,6 +88,11 @@ export const cameraData = createSlice({
 
     clearCamerasInCart: (state) => {
       state.camerasInCart = [];
+    },
+
+    resetSubmissionStatuses: (state) => {
+      state.hasFulfilledSubmitting = false;
+      state.hasRejectedSubmitting = false;
     },
   },
   extraReducers(builder) {
@@ -149,12 +156,16 @@ export const cameraData = createSlice({
       })
       .addCase(orderCameraAction.pending, (state) => {
         state.isSubmitting = true;
+        state.hasFulfilledSubmitting = false;
+        state.hasRejectedSubmitting = false;
         state.hasError = false;
       })
       .addCase(orderCameraAction.fulfilled, (state) => {
+        state.hasFulfilledSubmitting = true;
         state.isSubmitting = false;
       })
       .addCase(orderCameraAction.rejected, (state) => {
+        state.hasRejectedSubmitting = true;
         state.isSubmitting = false;
       });
   }

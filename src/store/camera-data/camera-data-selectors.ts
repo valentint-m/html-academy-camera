@@ -21,3 +21,7 @@ export const getErrorStatus = (state: State): boolean => state[NameSpace.Data].h
 
 export const getSubmittingStatus = (state: State): boolean => state[NameSpace.Data].isSubmitting;
 
+export const getIsSubmissionFulfilledStatus = (state: State): boolean => state[NameSpace.Data].hasFulfilledSubmitting;
+
+export const getIsSubmissionRejectedStatus = (state: State): boolean => state[NameSpace.Data].hasRejectedSubmitting;
+

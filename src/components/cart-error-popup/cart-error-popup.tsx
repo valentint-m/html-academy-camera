@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import { ESCAPE_KEY } from '../../const';
 import useScrollLock from '../../hooks/use-scroll-lock/use-scroll-lock';
 
-type CartSuccessPopupProps = {
+type CartErrorPopupProps = {
   onCloseModal: () => void;
 }
 
-export default function CartSuccessPopup ({onCloseModal}: CartSuccessPopupProps): JSX.Element {
+export default function CartErrorPopup ({onCloseModal}: CartErrorPopupProps): JSX.Element {
   useScrollLock();
 
   useEffect(() => {
@@ -25,10 +25,7 @@ export default function CartSuccessPopup ({onCloseModal}: CartSuccessPopupProps)
       <div className="modal__wrapper">
         <div className="modal__overlay" onClick={onCloseModal} ></div>
         <div className="modal__content">
-          <p className="title title--h4">Спасибо за покупку</p>
-          <svg className="modal__icon" width="80" height="78" aria-hidden="true">
-            <use xlinkHref="#icon-review-success"></use>
-          </svg>
+          <p className="title title--h4">Ошибка при отправке запроса.</p>
           <div className="modal__buttons">
             <button className="btn btn--purple modal__btn modal__btn--fit-width" type="button" onClick={onCloseModal} >Вернуться к покупкам
             </button>

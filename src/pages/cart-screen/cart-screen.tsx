@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Path } from '../../const';
-import { useAppSelector } from '../../hooks';
-import { getCamerasInCart } from '../../store/camera-data/camera-data-selectors';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { getCamerasInCart, getIsSubmissionFulfilledStatus, getIsSubmissionRejectedStatus, getSubmittingStatus } from '../../store/camera-data/camera-data-selectors';
 import { CameraInfo } from '../../types/camera';
 import { useEffect, useState } from 'react';
 import { scrollToTop } from '../../utils/utils';
@@ -10,16 +10,43 @@ import Header from '../../components/header/header';
 import CartSummary from '../../components/cart-summary/cart-summary';
 import CartList from '../../components/cart-list/cart-list';
 import CartRemoveItemPopup from '../../components/cart-remove-item-popup/cart-remove-item-popup';
+import CartSuccessPopup from '../../components/cart-success-popup/cart-success-popup';
+import CartErrorPopup from '../../components/cart-error-popup/cart-error-popup';
+import CartPreloader from '../../components/cart-preloader/cart-preloader';
+import { cameraData } from '../../store/camera-data/camera-data';
 
 export default function CartScreen (): JSX.Element {
+  const dispatch = useAppDispatch();
+
   const camerasInCart = useAppSelector(getCamerasInCart);
 
+  const isOrderFullfilled = useAppSelector(getIsSubmissionFulfilledStatus);
+  const isOrderRejected = useAppSelector(getIsSubmissionRejectedStatus);
+  const isOrderSubmitting = useAppSelector(getSubmittingStatus);
+
   const [selectedCamera, setCamera] = useState<CameraInfo | undefined>(undefined);
-  const [isPopupRemoveCameraActive, setPopupRemoveCameraActive] = useState(false);
+  const [isPopupRemoveCameraActive, setPopupRemoveCameraActive] = useState<boolean>(false);
+  const [isPopupOrderSuccessActive, setPopupOrderSuccessActive] = useState<boolean>(false);
+  const [isPopupOrderErrorActive, setPopupOrderErrorActive] = useState<boolean>(false);
 
   useEffect(() => {
     scrollToTop();
   }, []);
+
+  useEffect(() => {
+    if (isOrderFullfilled) {
+      setPopupOrderSuccessActive(true);
+      dispatch(cameraData.actions.clearCamerasInCart());
+      dispatch(cameraData.actions.resetSubmissionStatuses());
+    }
+  }, [dispatch, isOrderFullfilled]);
+
+  useEffect(() => {
+    if (isOrderRejected) {
+      setPopupOrderErrorActive(true);
+      dispatch(cameraData.actions.resetSubmissionStatuses());
+    }
+  }, [dispatch, isOrderRejected]);
 
   function handleRemoveButtonClick (camera: CameraInfo) {
     setPopupRemoveCameraActive(true);
@@ -28,6 +55,14 @@ export default function CartScreen (): JSX.Element {
 
   function handleModalRemoveCameraClose () {
     setPopupRemoveCameraActive(false);
+  }
+
+  function handleModalOrderSuccessClose () {
+    setPopupOrderSuccessActive(false);
+  }
+
+  function handleModalOrderErrorClose () {
+    setPopupOrderErrorActive(false);
   }
 
   return (
@@ -68,7 +103,10 @@ export default function CartScreen (): JSX.Element {
           </section>
         </div>
 
+        {isOrderSubmitting && <CartPreloader /> }
         {isPopupRemoveCameraActive && selectedCamera && <CartRemoveItemPopup camera={selectedCamera} onCloseModal={handleModalRemoveCameraClose} />}
+        {isPopupOrderSuccessActive && <CartSuccessPopup onCloseModal={handleModalOrderSuccessClose} />}
+        {isPopupOrderErrorActive && <CartErrorPopup onCloseModal={handleModalOrderErrorClose} />}
 
       </main>
       <Footer />

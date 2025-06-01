@@ -4,15 +4,21 @@ import { CameraInfo, ReviewInfo } from '../../types/camera';
 import { getCameraById, getReviews } from '../../store/camera-data/camera-data-selectors';
 import { useEffect, useState } from 'react';
 import { fetchCameraByIdAction, fetchReviewsByIdAction } from '../../store/api-actions/api-actions';
-import { Path, REVIEWS_COUNT_DEFAULT, SCROLL_UP_COORD } from '../../const';
-import { getDocumentTitle } from '../../utils/utils';
+import { Path, REVIEWS_COUNT_DEFAULT } from '../../const';
+import { getDocumentTitle, scrollToTop, scrollToTopEvent } from '../../utils/utils';
+import { cameraData } from '../../store/camera-data/camera-data';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
 import ReviewList from '../../components/review-list/review-list';
+import CatalogAddItemPopup from '../../components/catalog-add-item-popup/catalog-add-item-popup';
+import CatalogAddItemSuccessPopup from '../../components/catalog-add-item-success-popup/catalog-add-item-success-popup';
 
 export default function ProductScreen (): JSX.Element {
   const pageId = Number(useParams().id);
   const dispatch = useAppDispatch();
+
+  const [isPopupAddCameraActive, setPopupAddCameraActive] = useState(false);
+  const [isPopupAddCameraSuccessActive, setPopupAddCameraSuccessActive] = useState(false);
 
   const [isSpecsActive, setSpecsActive] = useState(false);
   const [showCount, setShowCount] = useState(REVIEWS_COUNT_DEFAULT);
@@ -28,6 +34,7 @@ export default function ProductScreen (): JSX.Element {
   }, [pageId, cameraById.id, dispatch]);
 
   useEffect(() => {
+    scrollToTop();
     document.title = getDocumentTitle(cameraById.name);
   }, [cameraById.name]);
 
@@ -43,12 +50,22 @@ export default function ProductScreen (): JSX.Element {
     setSpecsActive(false);
   }
 
-  function scrollToTop (evt: React.MouseEvent<HTMLAnchorElement>) {
-    evt.preventDefault();
-    window.scrollTo({
-      top: SCROLL_UP_COORD,
-      behavior: 'smooth'
-    });
+  function handleBuyButtonClick () {
+    setPopupAddCameraActive(true);
+  }
+
+  function handleModalAddCameraClose () {
+    setPopupAddCameraActive(false);
+  }
+
+  function handleAddCameraButtonClick () {
+    handleModalAddCameraClose();
+    setPopupAddCameraSuccessActive(true);
+    dispatch(cameraData.actions.addCameraToCart(cameraById));
+  }
+
+  function handleModalAddCameraSuccessClose () {
+    setPopupAddCameraSuccessActive(false);
   }
 
   return (
@@ -108,10 +125,11 @@ export default function ProductScreen (): JSX.Element {
                     <p className="rate__count"><span className="visually-hidden">Всего оценок:</span>{cameraById.reviewCount}</p>
                   </div>
                   <p className="product__price"><span className="visually-hidden">Цена:</span>{`${cameraById.price} ₽`}</p>
-                  <button className="btn btn--purple" type="button">
+                  <button className="btn btn--purple" type="button" onClick={handleBuyButtonClick}>
                     <svg width="24" height="16" aria-hidden="true">
                       <use xlinkHref="#icon-add-basket"></use>
-                    </svg>Добавить в корзину
+                    </svg>
+                    Добавить в корзину
                   </button>
                   <div className="tabs product__tabs">
                     <div className="tabs__controls product__tabs-controls">
@@ -164,8 +182,12 @@ export default function ProductScreen (): JSX.Element {
             </section>
           </div>
         </div>
+
+        {isPopupAddCameraActive && <CatalogAddItemPopup camera={cameraById} onAddItemButtonClick={handleAddCameraButtonClick} onCloseModal={handleModalAddCameraClose} />}
+        {isPopupAddCameraSuccessActive && <CatalogAddItemSuccessPopup onCloseModal={handleModalAddCameraSuccessClose} />}
+
       </main>
-      <a className="up-btn" href="" onClick={scrollToTop}>
+      <a className="up-btn" href="" onClick={scrollToTopEvent}>
         <svg width="12" height="18" aria-hidden="true">
           <use xlinkHref="#icon-arrow2"></use>
         </svg>

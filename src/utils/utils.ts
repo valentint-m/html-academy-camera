@@ -1,5 +1,5 @@
-import { ApiRoute, CameraCategoryRussian, CameraLevelRussian, CameraTypeRussian, DEFAULT_DOCUMENT_TITLE, FilterCameraCategory, FilterCameraLevel, FilterCameraType, PRODUCT_PATH, SortDirection, SortType } from '../const';
-import { CameraInfo, ReviewInfo } from '../types/camera';
+import { ApiRoute, CameraCategoryRussian, CameraCountDiscountValue, CameraLevelRussian, CameraSummaryPriceDiscountValue, CameraTypeRussian, CameraUpperCountForDiscount, CameraUpperSummaryPriceForDiscount, DEFAULT_DOCUMENT_TITLE, FilterCameraCategory, FilterCameraLevel, FilterCameraType, PRODUCT_PATH, SCROLL_UP_COORD, SortDirection, SortType } from '../const';
+import { CameraInCart, CameraInfo, PromoInfo, ReviewInfo } from '../types/camera';
 
 function getCameraUrlById (id: number) {
   return `${ApiRoute.Cameras}${id}`;
@@ -154,6 +154,16 @@ function getArrayWithNewOrDeletedElement<TypeElement>(array: TypeElement[], elem
   return arrayCopy;
 }
 
+function getCamerasInCartWithoutPromo(camerasInCart: CameraInCart[], promoCameras: PromoInfo[]) {
+  const camerasInCartIds = camerasInCart.map((camera) => camera.camera.id);
+  const promoCamerasIds = promoCameras.map((promoCamera) => promoCamera.id);
+  const camerasInCartWithoutPromoIds = camerasInCartIds.filter((id) => promoCamerasIds.indexOf(id) < 0);
+
+  const camerasInCartWithoutPromo: CameraInCart[] = camerasInCart.filter((camera) => camerasInCartWithoutPromoIds.includes(camera.camera.id));
+
+  return camerasInCartWithoutPromo;
+}
+
 function getCamerasSearchCount (cameras: CameraInfo[], searchText: string) {
   const cameraNames = cameras.map((camera) => camera.name.toLowerCase());
   let cameraCount = 0;
@@ -165,5 +175,80 @@ function getCamerasSearchCount (cameras: CameraInfo[], searchText: string) {
   return cameraCount;
 }
 
+function getCamerasInCartCount (camerasInCart: CameraInCart[]) {
+  let camerasInCartCount = 0;
+  camerasInCart.forEach((cameraInCart) => {
+    camerasInCartCount += cameraInCart.number;
+  });
 
-export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, getFormattedDate, getDocumentTitle, sortReviewsByLatest, sortCamerasByTypeAndDirection, getArrayWithNewOrDeletedElement, filterCameras, filterCamerasByPrice, getCamerasSearchCount };
+  return camerasInCartCount;
+}
+
+function getSummaryValue (camerasInCart: CameraInCart[]) {
+  let summaryValue = 0;
+
+  camerasInCart.forEach((cameraInCart) => {
+    summaryValue += cameraInCart.number * cameraInCart.camera.price;
+  });
+
+  return summaryValue;
+}
+
+function getBonusValue (summaryValue: number, camerasInCartCount: number) {
+  let bonusPercent = 0;
+
+  if (camerasInCartCount < CameraUpperCountForDiscount.Low) {
+    return bonusPercent;
+  } else if (camerasInCartCount === CameraUpperCountForDiscount.Low) {
+    bonusPercent = CameraCountDiscountValue.Low;
+  } else if (camerasInCartCount <= CameraUpperCountForDiscount.Medium) {
+    bonusPercent = CameraCountDiscountValue.Medium;
+  } else if (camerasInCartCount <= CameraUpperCountForDiscount.High) {
+    bonusPercent = CameraCountDiscountValue.High;
+  } else if (camerasInCartCount > CameraUpperCountForDiscount.High) {
+    bonusPercent = CameraCountDiscountValue.Highest;
+  }
+
+  if (summaryValue < CameraUpperSummaryPriceForDiscount.Low) {
+    return Math.round(summaryValue * 0.01 * bonusPercent);
+  } else if (summaryValue <= CameraUpperSummaryPriceForDiscount.Medium) {
+    bonusPercent -= CameraSummaryPriceDiscountValue.Low;
+  } else if (summaryValue <= CameraUpperSummaryPriceForDiscount.High) {
+    bonusPercent -= CameraSummaryPriceDiscountValue.Medium;
+  } else if (summaryValue > CameraUpperSummaryPriceForDiscount.High) {
+    bonusPercent -= CameraSummaryPriceDiscountValue.High;
+  }
+
+  return Math.round(summaryValue * 0.01 * bonusPercent);
+}
+
+function getSummaryWithDiscountValue (summaryValue: number, bonusValue: number) {
+  return summaryValue - bonusValue;
+}
+
+function checkIfCameraIsInCart (camera: CameraInfo, camerasInCart: CameraInCart[]) {
+  for (let i = 0; i < camerasInCart.length; i++) {
+    if (camerasInCart[i].camera.id === camera.id) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function scrollToTopEvent (evt: React.MouseEvent<HTMLAnchorElement>) {
+  evt.preventDefault();
+  window.scrollTo({
+    top: SCROLL_UP_COORD,
+    behavior: 'smooth'
+  });
+}
+
+function scrollToTop () {
+  window.scrollTo({
+    top: SCROLL_UP_COORD,
+    behavior: 'instant'
+  });
+}
+
+
+export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, getFormattedDate, getDocumentTitle, sortReviewsByLatest, sortCamerasByTypeAndDirection, getArrayWithNewOrDeletedElement, filterCameras, filterCamerasByPrice, getCamerasSearchCount, getSummaryValue, getBonusValue, getSummaryWithDiscountValue, getCamerasInCartCount, getCamerasInCartWithoutPromo, checkIfCameraIsInCart, scrollToTop, scrollToTopEvent };

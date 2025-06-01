@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction} from '@reduxjs/toolkit';
-import { NameSpace } from '../../const';
-import { CameraData } from '../../types/state';
+import { CameraInCartCountBoundaryValue, NameSpace } from '../../const';
+import { CameraCartCount, CameraData } from '../../types/state';
 import { fetchCameraByIdAction, fetchCamerasAction, fetchPromoCamerasAction, fetchReviewsByIdAction, fetchSimilarCamerasByIdAction, orderCameraAction } from '../api-actions/api-actions';
-import { CameraInfo, PromoInfo, ReviewInfo } from '../../types/camera';
+import { CameraInCart, CameraInfo, PromoInfo, ReviewInfo } from '../../types/camera';
 
 const initialState: CameraData = {
   cameras: [],
@@ -23,17 +23,99 @@ const initialState: CameraData = {
     previewImgWebp2x: '',
   },
   similarCameras: [],
+  camerasInCart: [],
   reviews: [],
   promoCameras: [],
   isCamerasDataLoading: false,
   hasError: false,
   isSubmitting: false,
+  hasFulfilledSubmitting: false,
+  hasRejectedSubmitting: false,
 };
 
 export const cameraData = createSlice({
   name: NameSpace.Data,
   initialState,
-  reducers: {},
+  reducers: {
+    addCameraToCart: (state, action: PayloadAction<CameraInfo | undefined>) => {
+      if (!action.payload) {
+        return;
+      }
+
+      const cameraInCart = state.camerasInCart.find((camera) => {
+        if (action.payload) {
+          return camera.camera.id === action.payload.id;
+        }
+      });
+
+      if (cameraInCart) {
+        if (cameraInCart.number === CameraInCartCountBoundaryValue.Max) {
+          return;
+        }
+        cameraInCart.number++;
+        localStorage.setItem('camerasInCart', JSON.stringify(state.camerasInCart));
+        return;
+      }
+
+      state.camerasInCart.push({camera: action.payload, number: 1});
+      localStorage.setItem('camerasInCart', JSON.stringify(state.camerasInCart));
+    },
+
+    setCameraInCartCount: (state, action: PayloadAction<CameraCartCount>) => {
+      for (let i = 0; i < state.camerasInCart.length; i++) {
+        if (state.camerasInCart[i].camera.id === action.payload.id) {
+          state.camerasInCart[i].number = action.payload.number;
+          localStorage.setItem('camerasInCart', JSON.stringify(state.camerasInCart));
+          break;
+        }
+      }
+    },
+
+    decreaseCameraInCartCount: (state, action: PayloadAction<number | undefined>) => {
+      for (let i = 0; i < state.camerasInCart.length; i++) {
+        if (state.camerasInCart[i].camera.id === action.payload) {
+          state.camerasInCart[i].number--;
+          localStorage.setItem('camerasInCart', JSON.stringify(state.camerasInCart));
+          break;
+        }
+      }
+    },
+
+    removeCameraFromCart: (state, action: PayloadAction<number>) => {
+      const camerasInCartCopy = [...state.camerasInCart];
+      let deletedCameraInCartIndex: number | undefined = undefined;
+
+      for (let i = 0; i < state.camerasInCart.length; i++) {
+        if (state.camerasInCart[i].camera.id === action.payload) {
+          deletedCameraInCartIndex = i;
+          break;
+        }
+      }
+
+      if (deletedCameraInCartIndex !== undefined) {
+        camerasInCartCopy.splice(deletedCameraInCartIndex, 1);
+        state.camerasInCart = camerasInCartCopy;
+        localStorage.setItem('camerasInCart', JSON.stringify(state.camerasInCart));
+      }
+    },
+
+    clearCamerasInCart: (state) => {
+      state.camerasInCart = [];
+      localStorage.setItem('camerasInCart', JSON.stringify(state.camerasInCart));
+    },
+
+    getCamerasInCartFromLocalStorage: (state) => {
+      const camerasFromLocalStorage = localStorage.getItem('camerasInCart');
+      if (camerasFromLocalStorage) {
+        state.camerasInCart = JSON.parse(camerasFromLocalStorage) as CameraInCart[];
+      }
+    },
+
+    resetSubmissionStatuses: (state) => {
+      state.hasFulfilledSubmitting = false;
+      state.hasRejectedSubmitting = false;
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchCamerasAction.pending, (state) => {
@@ -95,14 +177,20 @@ export const cameraData = createSlice({
       })
       .addCase(orderCameraAction.pending, (state) => {
         state.isSubmitting = true;
+        state.hasFulfilledSubmitting = false;
+        state.hasRejectedSubmitting = false;
         state.hasError = false;
       })
       .addCase(orderCameraAction.fulfilled, (state) => {
+        state.hasFulfilledSubmitting = true;
         state.isSubmitting = false;
       })
       .addCase(orderCameraAction.rejected, (state) => {
+        state.hasRejectedSubmitting = true;
         state.isSubmitting = false;
       });
   }
 });
+
+export const { addCameraToCart, clearCamerasInCart } = cameraData.actions;
 

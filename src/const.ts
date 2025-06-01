@@ -15,7 +15,7 @@ export enum ApiRoute {
 export enum Path {
   Main = '/',
   Catalog = '/catalog',
-  Basket = '/basket',
+  Cart = '/cart',
   Product = '/product/:id',
 }
 
@@ -76,6 +76,36 @@ export enum FilterCameraLevel {
   Zero = 'zero',
   NonProfessional = 'non-professional',
   Professional = 'professional',
+}
+
+export enum CameraUpperCountForDiscount {
+  Low = 2,
+  Medium = 5,
+  High = 10,
+}
+
+export enum CameraCountDiscountValue {
+  Low = 3,
+  Medium = 5,
+  High = 10,
+  Highest = 15,
+}
+
+export enum CameraUpperSummaryPriceForDiscount {
+  Low = 10000,
+  Medium = 20000,
+  High = 30000,
+}
+
+export enum CameraSummaryPriceDiscountValue {
+  Low = 1,
+  Medium = 2,
+  High = 3,
+}
+
+export enum CameraInCartCountBoundaryValue {
+  Min = 1,
+  Max = 9,
 }
 
 export const DEFAULT_DOCUMENT_TITLE = 'Фотошоп';

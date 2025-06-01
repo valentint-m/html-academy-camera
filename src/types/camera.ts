@@ -15,6 +15,11 @@ export type CameraInfo = {
   previewImgWebp2x: string;
 }
 
+export type CameraInCart = {
+  camera: CameraInfo;
+  number: number;
+}
+
 export type PromoInfo = {
   id: number;
   previewImg: string;

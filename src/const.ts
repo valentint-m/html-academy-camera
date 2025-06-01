@@ -105,7 +105,7 @@ export enum CameraSummaryPriceDiscountValue {
 
 export enum CameraInCartCountBoundaryValue {
   Min = 1,
-  Max = 99,
+  Max = 9,
 }
 
 export const DEFAULT_DOCUMENT_TITLE = 'Фотошоп';

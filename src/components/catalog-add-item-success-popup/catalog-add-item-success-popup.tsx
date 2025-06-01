@@ -33,7 +33,7 @@ export default function CatalogAddItemSuccessPopup ({onCloseModal}: CatalogAddIt
               <use xlinkHref="#icon-success"></use>
             </svg>
             <div className="modal__buttons">
-              <button className="btn btn--transparent modal__btn" onClick={onCloseModal}>Продолжить покупки</button>
+              <Link className="btn btn--transparent modal__btn" onClick={onCloseModal} to={Path.Catalog}>Продолжить покупки</Link>
               <Link className="btn btn--purple modal__btn modal__btn--fit-width" to={Path.Cart}>Перейти в корзину</Link>
             </div>
             <button className="cross-btn" type="button" aria-label="Закрыть попап" onClick={onCloseModal}>

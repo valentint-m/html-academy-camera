@@ -1,8 +1,8 @@
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { orderCameraAction } from '../../store/api-actions/api-actions';
-import { getSubmittingStatus } from '../../store/camera-data/camera-data-selectors';
+import { getPromoCameras, getSubmittingStatus } from '../../store/camera-data/camera-data-selectors';
 import { CameraInCart, OrderInfo } from '../../types/camera';
-import { getBonusValue, getCamerasInCartCount, getSummaryValue, getSummaryWithDiscountValue } from '../../utils/utils';
+import { getBonusValue, getCamerasInCartCount, getCamerasInCartWithoutPromo, getSummaryValue, getSummaryWithDiscountValue } from '../../utils/utils';
 import CartPromo from '../cart-promo/cart-promo';
 
 type CartSummaryProps = {
@@ -13,10 +13,15 @@ export default function CartSummary ({camerasInCart}: CartSummaryProps): JSX.Ele
   const dispatch = useAppDispatch();
 
   const isSubmitting = useAppSelector(getSubmittingStatus);
+  const promoCameras = useAppSelector(getPromoCameras);
+
+  const camerasInCartWithoutPromo = getCamerasInCartWithoutPromo(camerasInCart, promoCameras);
 
   const camerasInCartCount = getCamerasInCartCount(camerasInCart);
+  const camerasInCartWithoutPromoCount = getCamerasInCartCount(camerasInCartWithoutPromo);
   const summaryValue = getSummaryValue(camerasInCart);
-  const bonusValue = getBonusValue(summaryValue, camerasInCartCount);
+  const summaryValueWithoutPromo = getSummaryValue(camerasInCartWithoutPromo);
+  const bonusValue = getBonusValue(summaryValueWithoutPromo, camerasInCartWithoutPromoCount);
   const summaryWithDiscountValue = getSummaryWithDiscountValue(summaryValue, bonusValue);
 
   function handleOrderCamerasButtonClick () {

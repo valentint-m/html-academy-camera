@@ -1,5 +1,5 @@
 import { ApiRoute, CameraCategoryRussian, CameraCountDiscountValue, CameraLevelRussian, CameraSummaryPriceDiscountValue, CameraTypeRussian, CameraUpperCountForDiscount, CameraUpperSummaryPriceForDiscount, DEFAULT_DOCUMENT_TITLE, FilterCameraCategory, FilterCameraLevel, FilterCameraType, PRODUCT_PATH, SCROLL_UP_COORD, SortDirection, SortType } from '../const';
-import { CameraInCart, CameraInfo, ReviewInfo } from '../types/camera';
+import { CameraInCart, CameraInfo, PromoInfo, ReviewInfo } from '../types/camera';
 
 function getCameraUrlById (id: number) {
   return `${ApiRoute.Cameras}${id}`;
@@ -154,6 +154,16 @@ function getArrayWithNewOrDeletedElement<TypeElement>(array: TypeElement[], elem
   return arrayCopy;
 }
 
+function getCamerasInCartWithoutPromo(camerasInCart: CameraInCart[], promoCameras: PromoInfo[]) {
+  const camerasInCartIds = camerasInCart.map((camera) => camera.camera.id);
+  const promoCamerasIds = promoCameras.map((promoCamera) => promoCamera.id);
+  const camerasInCartWithoutPromoIds = camerasInCartIds.filter((id) => promoCamerasIds.indexOf(id) < 0);
+
+  const camerasInCartWithoutPromo: CameraInCart[] = camerasInCart.filter((camera) => camerasInCartWithoutPromoIds.includes(camera.camera.id));
+
+  return camerasInCartWithoutPromo;
+}
+
 function getCamerasSearchCount (cameras: CameraInfo[], searchText: string) {
   const cameraNames = cameras.map((camera) => camera.name.toLowerCase());
   let cameraCount = 0;
@@ -241,4 +251,4 @@ function scrollToTop () {
 }
 
 
-export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, getFormattedDate, getDocumentTitle, sortReviewsByLatest, sortCamerasByTypeAndDirection, getArrayWithNewOrDeletedElement, filterCameras, filterCamerasByPrice, getCamerasSearchCount, getSummaryValue, getBonusValue, getSummaryWithDiscountValue, getCamerasInCartCount, checkIfCameraIsInCart, scrollToTop, scrollToTopEvent };
+export { getCameraUrlById, getSimilarCamerasUrlById, getCameraReviewsUrlById, getCameraPathById, getFormattedDate, getDocumentTitle, sortReviewsByLatest, sortCamerasByTypeAndDirection, getArrayWithNewOrDeletedElement, filterCameras, filterCamerasByPrice, getCamerasSearchCount, getSummaryValue, getBonusValue, getSummaryWithDiscountValue, getCamerasInCartCount, getCamerasInCartWithoutPromo, checkIfCameraIsInCart, scrollToTop, scrollToTopEvent };

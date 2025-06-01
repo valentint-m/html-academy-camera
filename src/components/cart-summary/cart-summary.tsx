@@ -38,7 +38,7 @@ export default function CartSummary ({camerasInCart}: CartSummaryProps): JSX.Ele
       <CartPromo />
       <div className="basket__summary-order">
         <p className="basket__summary-item"><span className="basket__summary-text">Всего:</span><span className="basket__summary-value">{summaryValue} ₽</span></p>
-        <p className="basket__summary-item"><span className="basket__summary-text">Скидка:</span><span className="basket__summary-value basket__summary-value--bonus">{bonusValue} ₽</span></p>
+        <p className="basket__summary-item"><span className="basket__summary-text">Скидка:</span><span className={`basket__summary-value ${bonusValue > 0 ? 'basket__summary-value--bonus' : ''}`}>{bonusValue} ₽</span></p>
         <p className="basket__summary-item"><span className="basket__summary-text basket__summary-text--total">К оплате:</span><span className="basket__summary-value basket__summary-value--total">{summaryWithDiscountValue} ₽</span></p>
         <button className="btn btn--purple" type="submit" onClick={handleOrderCamerasButtonClick} disabled={!camerasInCartCount || isSubmitting} >Оформить заказ
         </button>

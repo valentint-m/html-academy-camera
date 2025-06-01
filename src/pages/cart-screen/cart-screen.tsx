@@ -5,6 +5,7 @@ import { getCamerasInCart, getIsSubmissionFulfilledStatus, getIsSubmissionReject
 import { CameraInfo } from '../../types/camera';
 import { useEffect, useState } from 'react';
 import { scrollToTop } from '../../utils/utils';
+import { cameraData } from '../../store/camera-data/camera-data';
 import Footer from '../../components/footer/footer';
 import Header from '../../components/header/header';
 import CartSummary from '../../components/cart-summary/cart-summary';
@@ -13,7 +14,6 @@ import CartRemoveItemPopup from '../../components/cart-remove-item-popup/cart-re
 import CartSuccessPopup from '../../components/cart-success-popup/cart-success-popup';
 import CartErrorPopup from '../../components/cart-error-popup/cart-error-popup';
 import CartPreloader from '../../components/cart-preloader/cart-preloader';
-import { cameraData } from '../../store/camera-data/camera-data';
 
 export default function CartScreen (): JSX.Element {
   const dispatch = useAppDispatch();

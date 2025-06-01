@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction} from '@reduxjs/toolkit';
-import { NameSpace } from '../../const';
+import { CameraInCartCountBoundaryValue, NameSpace } from '../../const';
 import { CameraCartCount, CameraData } from '../../types/state';
 import { fetchCameraByIdAction, fetchCamerasAction, fetchPromoCamerasAction, fetchReviewsByIdAction, fetchSimilarCamerasByIdAction, orderCameraAction } from '../api-actions/api-actions';
-import { CameraInfo, PromoInfo, ReviewInfo } from '../../types/camera';
+import { CameraInCart, CameraInfo, PromoInfo, ReviewInfo } from '../../types/camera';
 
 const initialState: CameraData = {
   cameras: [],
@@ -42,19 +42,30 @@ export const cameraData = createSlice({
         return;
       }
 
-      for (let i = 0; i < state.camerasInCart.length; i++) {
-        if (state.camerasInCart[i].camera.id === action.payload.id) {
-          state.camerasInCart[i].number++;
+      const cameraInCart = state.camerasInCart.find((camera) => {
+        if (action.payload) {
+          return camera.camera.id === action.payload.id;
+        }
+      });
+
+      if (cameraInCart) {
+        if (cameraInCart.number === CameraInCartCountBoundaryValue.Max) {
           return;
         }
+        cameraInCart.number++;
+        localStorage.setItem('camerasInCart', JSON.stringify(state.camerasInCart));
+        return;
       }
+
       state.camerasInCart.push({camera: action.payload, number: 1});
+      localStorage.setItem('camerasInCart', JSON.stringify(state.camerasInCart));
     },
 
     setCameraInCartCount: (state, action: PayloadAction<CameraCartCount>) => {
       for (let i = 0; i < state.camerasInCart.length; i++) {
         if (state.camerasInCart[i].camera.id === action.payload.id) {
           state.camerasInCart[i].number = action.payload.number;
+          localStorage.setItem('camerasInCart', JSON.stringify(state.camerasInCart));
           break;
         }
       }
@@ -64,6 +75,7 @@ export const cameraData = createSlice({
       for (let i = 0; i < state.camerasInCart.length; i++) {
         if (state.camerasInCart[i].camera.id === action.payload) {
           state.camerasInCart[i].number--;
+          localStorage.setItem('camerasInCart', JSON.stringify(state.camerasInCart));
           break;
         }
       }
@@ -83,11 +95,20 @@ export const cameraData = createSlice({
       if (deletedCameraInCartIndex !== undefined) {
         camerasInCartCopy.splice(deletedCameraInCartIndex, 1);
         state.camerasInCart = camerasInCartCopy;
+        localStorage.setItem('camerasInCart', JSON.stringify(state.camerasInCart));
       }
     },
 
     clearCamerasInCart: (state) => {
       state.camerasInCart = [];
+      localStorage.setItem('camerasInCart', JSON.stringify(state.camerasInCart));
+    },
+
+    getCamerasInCartFromLocalStorage: (state) => {
+      const camerasFromLocalStorage = localStorage.getItem('camerasInCart');
+      if (camerasFromLocalStorage) {
+        state.camerasInCart = JSON.parse(camerasFromLocalStorage) as CameraInCart[];
+      }
     },
 
     resetSubmissionStatuses: (state) => {

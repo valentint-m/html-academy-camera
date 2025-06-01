@@ -13,11 +13,14 @@ describe('CameraData selectors:', () => {
       cameras: [mockCamera],
       cameraById: mockCamera,
       similarCameras: [mockSimilarCamera],
+      camerasInCart: [],
       reviews: [mockReview],
       promoCameras: [mockPromoCamera],
       isCamerasDataLoading: false,
       hasError: false,
       isSubmitting: false,
+      hasFulfilledSubmitting: false,
+      hasRejectedSubmitting: false,
     }
   };
 
